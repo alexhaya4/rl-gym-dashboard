@@ -1,0 +1,70 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Layout } from './components/Layout/Layout';
+import { useAuthStore } from './store/authStore';
+import { lazy, Suspense, type ReactNode } from 'react';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 30_000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Environments = lazy(() => import('./pages/Environments'));
+const Training = lazy(() => import('./pages/Training'));
+const Experiments = lazy(() => import('./pages/Experiments'));
+const Benchmarks = lazy(() => import('./pages/Benchmarks'));
+const Models = lazy(() => import('./pages/Models'));
+const ABTesting = lazy(() => import('./pages/ABTesting'));
+const Algorithms = lazy(() => import('./pages/Algorithms'));
+
+function ProtectedRoute({ children }: { children: ReactNode }) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
+function Loading() {
+  return (
+    <div className="flex items-center justify-center h-64">
+      <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="environments" element={<Environments />} />
+              <Route path="training" element={<Training />} />
+              <Route path="experiments" element={<Experiments />} />
+              <Route path="benchmarks" element={<Benchmarks />} />
+              <Route path="models" element={<Models />} />
+              <Route path="ab-testing" element={<ABTesting />} />
+              <Route path="algorithms" element={<Algorithms />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+}
