@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it responsibly by emailing alexhaya4@gmail.com.
+If you discover a security vulnerability, please report it responsibly by emailing alexhaya19@gmail.com.
 
 Do not open a public issue for security vulnerabilities.
 
