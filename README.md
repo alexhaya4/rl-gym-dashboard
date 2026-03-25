@@ -1,73 +1,135 @@
-# React + TypeScript + Vite
+# RL Gym Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A production-grade React dashboard for the [RL Gym API](https://github.com/alexhaya4/rl-gym-api) platform. Built with React 19 and TypeScript, featuring a design language inspired by Claude.ai — clean typography, warm accent tones, and a polished dark/light mode.
 
-Currently, two official plugins are available:
+**Live Demo:** https://rl-gym-dashboard-production.up.railway.app
+**Backend API Docs:** https://rl-gym-api-production.up.railway.app/docs
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<!-- ![Dashboard Screenshot](docs/screenshot.png) -->
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 19, TypeScript |
+| Build | Vite 8 |
+| Styling | Tailwind CSS v4 |
+| Charts | Recharts |
+| State | Zustand (auth, theme) |
+| Data Fetching | React Query (TanStack Query) |
+| Animation | Framer Motion |
+| HTTP | Axios |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **JWT Authentication** — Login, register, and persistent session management
+- **Environment Management** — Create, reset, step, and delete Gymnasium environments
+- **Training with Live WebSocket Metrics** — Start training jobs with real-time reward/loss charts
+- **Experiment Tracking** — Create, search, filter, and delete experiments
+- **Benchmarking with Charts** — Run multi-environment, multi-algorithm benchmarks with bar chart visualization
+- **Model Registry with Stage Promotion** — Register models, promote across development/staging/production/archived stages
+- **A/B Testing with Statistical Significance** — Create and run A/B tests with t-test/Mann-Whitney, view p-values and effect sizes
+- **Algorithm Reference with Compatibility Filtering** — Browse all supported RL algorithms, filter by environment compatibility
+- **Dark/Light Mode Toggle** — System-aware theme with manual override
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+### Installation
+
+```bash
+git clone https://github.com/alexhaya4/rl-gym-dashboard.git
+cd rl-gym-dashboard
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Configuration
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env` file in the project root:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_URL=http://localhost:8000
 ```
+
+This points to your running instance of the [RL Gym API](https://github.com/alexhaya4/rl-gym-api) backend.
+
+### Development
+
+```bash
+npm run dev
+```
+
+Opens at http://localhost:5173 by default.
+
+### Build
+
+```bash
+npm run build
+```
+
+Outputs to `dist/`. The build runs TypeScript type-checking (`tsc -b`) followed by the Vite production bundler.
+
+## Deployment
+
+This project is deployed on [Railway](https://railway.app) using Nixpacks. The only required environment variable is:
+
+```
+VITE_API_URL=https://your-api-domain.com
+```
+
+Railway auto-detects the Vite project and runs `npm run build` + serves the `dist/` directory.
+
+## Project Structure
+
+```
+src/
+├── api/                # API client modules (auth, environments, experiments, training, benchmarks)
+│   ├── client.ts       # Axios instance, interceptors, WebSocket URL builder
+│   ├── auth.ts         # Login, register, me
+│   ├── environments.ts # CRUD, reset, step
+│   ├── experiments.ts  # CRUD with pagination
+│   ├── training.ts     # Start, list, job status, results
+│   └── benchmarks.ts   # Run benchmarks, list environments/algorithms
+├── components/
+│   ├── Layout/         # Sidebar, Header, Layout shell
+│   └── UI/             # Badge, Button, Card, Input, Modal
+├── pages/
+│   ├── Login.tsx       # Auth (login + register)
+│   ├── Dashboard.tsx   # Overview stats and recent activity
+│   ├── Environments.tsx
+│   ├── Training.tsx    # Live WebSocket metrics chart
+│   ├── Experiments.tsx
+│   ├── Benchmarks.tsx  # Multi-select form + bar charts
+│   ├── Models.tsx      # Registry with stage promotion
+│   ├── ABTesting.tsx   # Statistical test results
+│   └── Algorithms.tsx  # Compatibility filtering
+├── store/
+│   ├── authStore.ts    # Zustand auth state (persisted)
+│   └── themeStore.ts   # Zustand theme state (persisted)
+├── types/
+│   └── index.ts        # All TypeScript interfaces matching backend schemas
+├── App.tsx             # Router, lazy loading, protected routes
+└── main.tsx            # Entry point
+```
+
+## API Contract Reference
+
+See [FRONTEND_CONTRACT.md](FRONTEND_CONTRACT.md) for a complete mapping of every frontend API call, page action, and type definition against the backend contract.
+
+## Related
+
+- **Backend:** [alexhaya4/rl-gym-api](https://github.com/alexhaya4/rl-gym-api) — FastAPI backend with Gymnasium, Stable-Baselines3, Arq workers, and PostgreSQL
+
+## Author
+
+**Alex Odhiambo Haya**
+
+## License
+
+[MIT](LICENSE)
