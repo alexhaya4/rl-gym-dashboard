@@ -2,7 +2,7 @@
 
 A production-grade React dashboard for the [RL Gym API](https://github.com/alexhaya4/rl-gym-api) platform. Built with React 19 and TypeScript, featuring a design language inspired by Claude.ai — clean typography, warm accent tones, and a polished dark/light mode.
 
-**Live Demo:** https://rl-gym-dashboard-production.up.railway.app
+**Live Demo:** https://dashboard.rlgymapi.com/
 **Backend API Docs:** https://rl-gym-api-production.up.railway.app/docs
 
 <!-- ![Dashboard Screenshot](docs/screenshot.png) -->
