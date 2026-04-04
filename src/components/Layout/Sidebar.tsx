@@ -8,6 +8,11 @@ import {
   Package,
   GitBranch,
   Cpu,
+  Zap,
+  Video,
+  Database,
+  Brain,
+  Network,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -26,6 +31,11 @@ const navItems = [
   { to: '/models', icon: Package, label: 'Models' },
   { to: '/ab-testing', icon: GitBranch, label: 'A/B Testing' },
   { to: '/algorithms', icon: Cpu, label: 'Algorithms' },
+  { to: '/inference', icon: Zap, label: 'Inference' },
+  { to: '/videos', icon: Video, label: 'Videos' },
+  { to: '/datasets', icon: Database, label: 'Datasets' },
+  { to: '/ml', icon: Brain, label: 'Machine Learning' },
+  { to: '/distributed', icon: Network, label: 'Distributed' },
 ];
 
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {

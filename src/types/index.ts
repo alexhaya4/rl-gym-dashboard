@@ -274,6 +274,154 @@ export interface DashboardStats {
   recent_experiments: Experiment[];
 }
 
+export interface InferenceRequest {
+  observation: number[];
+  algorithm?: string;
+  deterministic?: boolean;
+}
+
+export interface InferenceResponse {
+  action: number | number[];
+  action_probability?: number;
+  latency_ms: number;
+  model_version_id: number;
+  algorithm: string;
+  environment_id: string;
+}
+
+export interface ModelCacheInfo {
+  model_path: string;
+  algorithm: string;
+  environment_id: string;
+  loaded_at: string;
+  memory_mb: number;
+}
+
+export interface VideoRequest {
+  environment_id: string;
+  algorithm: string;
+  num_episodes: number;
+  max_steps: number;
+  fps: number;
+}
+
+export interface VideoStatus {
+  video_id: string;
+  status: string;
+  progress: number;
+  error?: string;
+}
+
+export interface VideoResponse {
+  video_id: string;
+  status: string;
+  video_url?: string;
+  num_episodes: number;
+  total_steps: number;
+  total_reward: number;
+  duration_seconds: number;
+  file_size_mb: number;
+}
+
+export interface DatasetResponse {
+  id: number;
+  name: string;
+  description?: string;
+  dataset_type: string;
+  num_samples?: number;
+  num_features?: number;
+  columns?: string[];
+  file_size_mb: number;
+  owner_id: number;
+  created_at: string;
+}
+
+export interface DatasetPreview {
+  rows: Record<string, unknown>[];
+  total_rows: number;
+  columns: string[];
+}
+
+export interface DatasetStatistics {
+  column_name: string;
+  dtype: string;
+  mean?: number;
+  std?: number;
+  min?: number;
+  max?: number;
+  null_count: number;
+  unique_count: number;
+}
+
+export interface MLTrainRequest {
+  dataset_id: number;
+  algorithm: string;
+  target_column?: string;
+  hyperparameters?: Record<string, unknown>;
+  test_split?: number;
+  task_type: string;
+}
+
+export interface MLTrainResponse {
+  model_id: number;
+  algorithm: string;
+  task_type: string;
+  metrics: Record<string, unknown>;
+  training_time_seconds: number;
+  feature_importance?: { feature: string; importance: number }[];
+  nan_rows_dropped: number;
+}
+
+export interface MLPredictRequest {
+  model_id: number;
+  features: number[][];
+}
+
+export interface MLPredictResponse {
+  predictions: (number | string)[];
+  probabilities?: number[][];
+  model_id: number;
+  inference_time_ms: number;
+}
+
+export interface MLModelInfo {
+  id: number;
+  name: string;
+  algorithm: string;
+  task_type: string;
+  dataset_id?: number;
+  metrics: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface DistributedTrainRequest {
+  environment_id: string;
+  algorithm: string;
+  total_timesteps: number;
+  num_workers: number;
+  num_envs_per_worker: number;
+  hyperparameters?: Record<string, unknown>;
+  experiment_name?: string;
+}
+
+export interface DistributedTrainResponse {
+  job_id: string;
+  status: string;
+  num_workers: number;
+  total_envs: number;
+  estimated_speedup: number;
+}
+
+export interface DistributedStatus {
+  job_id: string;
+  status: string;
+  progress: number;
+  metrics?: Record<string, unknown>;
+  elapsed_seconds: number;
+  num_workers_active: number;
+  error?: string;
+}
+
 export interface ApiError {
   detail: string;
 }

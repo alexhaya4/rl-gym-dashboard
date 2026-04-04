@@ -23,6 +23,11 @@ const Benchmarks = lazy(() => import('./pages/Benchmarks'));
 const Models = lazy(() => import('./pages/Models'));
 const ABTesting = lazy(() => import('./pages/ABTesting'));
 const Algorithms = lazy(() => import('./pages/Algorithms'));
+const Inference = lazy(() => import('./pages/Inference'));
+const Videos = lazy(() => import('./pages/Videos'));
+const Datasets = lazy(() => import('./pages/Datasets'));
+const MachineLearning = lazy(() => import('./pages/MachineLearning'));
+const DistributedTraining = lazy(() => import('./pages/DistributedTraining'));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -60,6 +65,11 @@ export default function App() {
               <Route path="models" element={<Models />} />
               <Route path="ab-testing" element={<ABTesting />} />
               <Route path="algorithms" element={<Algorithms />} />
+              <Route path="inference" element={<Inference />} />
+              <Route path="videos" element={<Videos />} />
+              <Route path="datasets" element={<Datasets />} />
+              <Route path="ml" element={<MachineLearning />} />
+              <Route path="distributed" element={<DistributedTraining />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
