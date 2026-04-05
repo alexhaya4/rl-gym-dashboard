@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { oauthApi } from '../api/oauth';
 import { useAuthStore } from '../store/authStore';
@@ -8,19 +8,21 @@ export default function OAuthCallback() {
   const navigate = useNavigate();
   const setToken = useAuthStore((s) => s.setToken);
   const [error, setError] = useState<string | null>(null);
+  const ran = useRef(false);
 
   useEffect(() => {
+    if (ran.current) return;
+    ran.current = true;
+
     const code = searchParams.get('code');
     const state = searchParams.get('state');
 
-    if (!code || !state) {
-      setError('Missing code or state parameter');
-      return;
-    }
-
-    const provider = state.startsWith('google') ? 'google' : 'github';
-
     const handleCallback = async () => {
+      if (!code || !state) {
+        setError('Missing code or state parameter');
+        return;
+      }
+      const provider = state.startsWith('google') ? 'google' : 'github';
       try {
         const callbackFn = provider === 'google'
           ? oauthApi.googleCallback

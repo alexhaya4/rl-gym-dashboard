@@ -71,8 +71,9 @@ export default function Videos() {
   }, [queryClient]);
 
   useEffect(() => {
+    const refs = pollRefs.current;
     return () => {
-      pollRefs.current.forEach((interval) => clearInterval(interval));
+      refs.forEach((interval) => clearInterval(interval));
     };
   }, []);
 
