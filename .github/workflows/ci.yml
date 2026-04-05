@@ -20,8 +20,15 @@ jobs:
         run: npm run lint
       - name: TypeScript type check
         run: npx tsc --noEmit
-      - name: Prettier format check
-        run: npx prettier --check "src/**/*.{ts,tsx,css}"
+      - name: Auto-format with Prettier
+        run: npx prettier --write "src/**/*.{ts,tsx,css}"
+      - name: Check if formatting changed files
+        run: |
+          if [ -n "$(git diff --name-only)" ]; then
+            echo "ERROR: Files not formatted. Run 'npx prettier --write \"src/**/*.{ts,tsx,css}\"' before committing."
+            git diff --name-only
+            exit 1
+          fi
 
   security:
     runs-on: ubuntu-latest
