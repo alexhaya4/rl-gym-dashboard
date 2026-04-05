@@ -7,6 +7,7 @@ import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import { authApi } from '../api/auth';
 import { oauthApi } from '../api/oauth';
+import { rbacApi } from '../api/rbac';
 import { extractError } from '../utils/extractError';
 
 export default function Login() {
@@ -34,6 +35,14 @@ export default function Login() {
       useAuthStore.getState().setToken(tokens.access_token);
       const user = await authApi.me();
       setAuth(tokens.access_token, user);
+      try {
+        const perms = await rbacApi.myPermissions();
+        const role = (perms.role as string) ?? 'viewer';
+        const permList = Array.isArray(perms.permissions) ? (perms.permissions as string[]) : [];
+        useAuthStore.getState().setRbac(role, permList);
+      } catch {
+        /* RBAC endpoint may not be available, default to viewer */
+      }
       navigate('/');
     } catch (err: unknown) {
       setError(extractError(err));

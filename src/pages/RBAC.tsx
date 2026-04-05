@@ -6,6 +6,7 @@ import { Button } from '../components/UI/Button';
 import { Input } from '../components/UI/Input';
 import { Badge } from '../components/UI/Badge';
 import { rbacApi } from '../api/rbac';
+import { PermissionGate } from '../components/PermissionGate';
 
 export default function RBAC() {
   const [assignForm, setAssignForm] = useState({ user_id: 0, role: '', organization_id: '' });
@@ -87,65 +88,76 @@ export default function RBAC() {
       </Card>
 
       {/* Assign Role */}
-      <Card>
-        <h2 className="text-sm font-semibold mb-4">Assign Role</h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            assignMutation.mutate({
-              user_id: assignForm.user_id,
-              role: assignForm.role,
-              organization_id: assignForm.organization_id
-                ? Number(assignForm.organization_id)
-                : undefined,
-            });
-          }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4"
-        >
-          <Input
-            label="User ID"
-            type="number"
-            value={assignForm.user_id || ''}
-            onChange={(e) => setAssignForm({ ...assignForm, user_id: Number(e.target.value) })}
-            required
-          />
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
-              Role
-            </label>
-            <select
-              value={assignForm.role}
-              onChange={(e) => setAssignForm({ ...assignForm, role: e.target.value })}
-              className="w-full px-3 py-2 text-sm rounded-[var(--radius-input)] border dark:bg-dark-input dark:border-dark-border dark:text-dark-text bg-light-input border-light-border text-light-text"
+      <PermissionGate
+        permission="rbac:assign"
+        fallback={
+          <Card>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">
+              Admin access required to assign roles
+            </p>
+          </Card>
+        }
+      >
+        <Card>
+          <h2 className="text-sm font-semibold mb-4">Assign Role</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              assignMutation.mutate({
+                user_id: assignForm.user_id,
+                role: assignForm.role,
+                organization_id: assignForm.organization_id
+                  ? Number(assignForm.organization_id)
+                  : undefined,
+              });
+            }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            <Input
+              label="User ID"
+              type="number"
+              value={assignForm.user_id || ''}
+              onChange={(e) => setAssignForm({ ...assignForm, user_id: Number(e.target.value) })}
               required
-            >
-              <option value="">Select role...</option>
-              {roles.map((role) => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Input
-            label="Organization ID (optional)"
-            type="number"
-            value={assignForm.organization_id}
-            onChange={(e) => setAssignForm({ ...assignForm, organization_id: e.target.value })}
-          />
-          <div className="md:col-span-3 flex justify-end">
-            <Button type="submit" loading={assignMutation.isPending}>
-              Assign Role
-            </Button>
-          </div>
-        </form>
-        {assignMutation.isSuccess && (
-          <div className="mt-3 flex items-center gap-2 text-sm text-emerald-400">
-            <CheckCircle size={14} />
-            Role assigned successfully
-          </div>
-        )}
-      </Card>
+            />
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                Role
+              </label>
+              <select
+                value={assignForm.role}
+                onChange={(e) => setAssignForm({ ...assignForm, role: e.target.value })}
+                className="w-full px-3 py-2 text-sm rounded-[var(--radius-input)] border dark:bg-dark-input dark:border-dark-border dark:text-dark-text bg-light-input border-light-border text-light-text"
+                required
+              >
+                <option value="">Select role...</option>
+                {roles.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <Input
+              label="Organization ID (optional)"
+              type="number"
+              value={assignForm.organization_id}
+              onChange={(e) => setAssignForm({ ...assignForm, organization_id: e.target.value })}
+            />
+            <div className="md:col-span-3 flex justify-end">
+              <Button type="submit" loading={assignMutation.isPending}>
+                Assign Role
+              </Button>
+            </div>
+          </form>
+          {assignMutation.isSuccess && (
+            <div className="mt-3 flex items-center gap-2 text-sm text-emerald-400">
+              <CheckCircle size={14} />
+              Role assigned successfully
+            </div>
+          )}
+        </Card>
+      </PermissionGate>
 
       {/* Permission Check */}
       <Card>

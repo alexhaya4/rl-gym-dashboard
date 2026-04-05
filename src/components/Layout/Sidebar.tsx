@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore';
 import {
   LayoutDashboard,
   Grid3X3,
@@ -37,36 +38,39 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/environments', icon: Grid3X3, label: 'Environments' },
-  { to: '/vec-environments', icon: Layers, label: 'Vec Environments' },
-  { to: '/custom-environments', icon: Code, label: 'Custom Envs' },
-  { to: '/training', icon: Play, label: 'Training' },
-  { to: '/distributed', icon: Network, label: 'Distributed' },
-  { to: '/multi-agent', icon: Users, label: 'Multi-Agent' },
-  { to: '/experiments', icon: FlaskConical, label: 'Experiments' },
-  { to: '/comparison', icon: GitCompare, label: 'Comparison' },
-  { to: '/evaluation', icon: ClipboardCheck, label: 'Evaluation' },
-  { to: '/benchmarks', icon: BarChart3, label: 'Benchmarks' },
-  { to: '/optimization', icon: Target, label: 'Optimization' },
-  { to: '/pbt', icon: TrendingUp, label: 'PBT' },
-  { to: '/models', icon: Package, label: 'Models' },
-  { to: '/ab-testing', icon: GitBranch, label: 'A/B Testing' },
-  { to: '/algorithms', icon: Cpu, label: 'Algorithms' },
-  { to: '/inference', icon: Zap, label: 'Inference' },
-  { to: '/videos', icon: Video, label: 'Videos' },
-  { to: '/datasets', icon: Database, label: 'Datasets' },
-  { to: '/ml', icon: Brain, label: 'Machine Learning' },
-  { to: '/artifacts', icon: Archive, label: 'Artifacts' },
-  { to: '/pipelines', icon: Workflow, label: 'Pipelines' },
-  { to: '/organizations', icon: Building, label: 'Organizations' },
-  { to: '/billing', icon: CreditCard, label: 'Billing' },
-  { to: '/rbac', icon: Shield, label: 'Access Control' },
-  { to: '/audit-logs', icon: FileText, label: 'Audit Logs' },
-  { to: '/system-status', icon: Activity, label: 'System Status' },
+  { to: '/', icon: LayoutDashboard, label: 'Dashboard', adminOnly: false },
+  { to: '/environments', icon: Grid3X3, label: 'Environments', adminOnly: false },
+  { to: '/vec-environments', icon: Layers, label: 'Vec Environments', adminOnly: false },
+  { to: '/custom-environments', icon: Code, label: 'Custom Envs', adminOnly: false },
+  { to: '/training', icon: Play, label: 'Training', adminOnly: false },
+  { to: '/distributed', icon: Network, label: 'Distributed', adminOnly: false },
+  { to: '/multi-agent', icon: Users, label: 'Multi-Agent', adminOnly: false },
+  { to: '/experiments', icon: FlaskConical, label: 'Experiments', adminOnly: false },
+  { to: '/comparison', icon: GitCompare, label: 'Comparison', adminOnly: false },
+  { to: '/evaluation', icon: ClipboardCheck, label: 'Evaluation', adminOnly: false },
+  { to: '/benchmarks', icon: BarChart3, label: 'Benchmarks', adminOnly: false },
+  { to: '/optimization', icon: Target, label: 'Optimization', adminOnly: false },
+  { to: '/pbt', icon: TrendingUp, label: 'PBT', adminOnly: false },
+  { to: '/models', icon: Package, label: 'Models', adminOnly: false },
+  { to: '/ab-testing', icon: GitBranch, label: 'A/B Testing', adminOnly: false },
+  { to: '/algorithms', icon: Cpu, label: 'Algorithms', adminOnly: false },
+  { to: '/inference', icon: Zap, label: 'Inference', adminOnly: false },
+  { to: '/videos', icon: Video, label: 'Videos', adminOnly: false },
+  { to: '/datasets', icon: Database, label: 'Datasets', adminOnly: false },
+  { to: '/ml', icon: Brain, label: 'Machine Learning', adminOnly: false },
+  { to: '/artifacts', icon: Archive, label: 'Artifacts', adminOnly: false },
+  { to: '/pipelines', icon: Workflow, label: 'Pipelines', adminOnly: false },
+  { to: '/organizations', icon: Building, label: 'Organizations', adminOnly: false },
+  { to: '/billing', icon: CreditCard, label: 'Billing', adminOnly: true },
+  { to: '/rbac', icon: Shield, label: 'Access Control', adminOnly: true },
+  { to: '/audit-logs', icon: FileText, label: 'Audit Logs', adminOnly: false },
+  { to: '/system-status', icon: Activity, label: 'System Status', adminOnly: false },
 ];
 
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const role = useAuthStore((s) => s.role);
+  const isAdmin = role === 'admin';
+  const visibleItems = navItems.filter((item) => !item.adminOnly || isAdmin);
   return (
     <aside
       className={`
@@ -84,7 +88,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </div>
 
       <nav className="flex-1 py-3 px-2 space-y-0.5 overflow-y-auto">
-        {navItems.map((item) => (
+        {visibleItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}

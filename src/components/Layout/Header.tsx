@@ -5,9 +5,20 @@ import { authApi } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 
+const roleBadgeStyle = (role: string | null) => {
+  switch (role) {
+    case 'admin':
+      return 'bg-red-500/15 text-red-400';
+    case 'member':
+      return 'bg-blue-500/15 text-blue-400';
+    default:
+      return 'dark:bg-dark-border dark:text-dark-text-secondary bg-light-border text-light-text-secondary';
+  }
+};
+
 export function Header() {
   const { theme, toggleTheme } = useThemeStore();
-  const { user, logout } = useAuthStore();
+  const { user, role, logout } = useAuthStore();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -53,6 +64,13 @@ export function Header() {
           <span className="text-sm dark:text-dark-text text-light-text">
             {user?.username ?? 'User'}
           </span>
+          {role && (
+            <span
+              className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded-full ${roleBadgeStyle(role)}`}
+            >
+              {role}
+            </span>
+          )}
         </button>
 
         {menuOpen && (

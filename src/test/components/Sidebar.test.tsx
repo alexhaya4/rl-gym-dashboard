@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Sidebar } from '../../components/Layout/Sidebar';
+import { useAuthStore } from '../../store/authStore';
 
 function renderSidebar(collapsed = false) {
   return render(
@@ -11,7 +12,7 @@ function renderSidebar(collapsed = false) {
   );
 }
 
-const expectedItems = [
+const publicItems = [
   { label: 'Dashboard', href: '/' },
   { label: 'Environments', href: '/environments' },
   { label: 'Vec Environments', href: '/vec-environments' },
@@ -35,23 +36,45 @@ const expectedItems = [
   { label: 'Artifacts', href: '/artifacts' },
   { label: 'Pipelines', href: '/pipelines' },
   { label: 'Organizations', href: '/organizations' },
-  { label: 'Billing', href: '/billing' },
-  { label: 'Access Control', href: '/rbac' },
   { label: 'Audit Logs', href: '/audit-logs' },
   { label: 'System Status', href: '/system-status' },
 ];
 
+const adminOnlyItems = [
+  { label: 'Billing', href: '/billing' },
+  { label: 'Access Control', href: '/rbac' },
+];
+
 describe('Sidebar', () => {
-  it('renders all navigation items', () => {
+  beforeEach(() => {
+    useAuthStore.setState({ role: null, permissions: [] });
+  });
+
+  it('renders public navigation items for non-admin', () => {
     renderSidebar();
-    for (const item of expectedItems) {
+    for (const item of publicItems) {
+      expect(screen.getByText(item.label)).toBeInTheDocument();
+    }
+  });
+
+  it('hides admin-only items for non-admin', () => {
+    renderSidebar();
+    for (const item of adminOnlyItems) {
+      expect(screen.queryByText(item.label)).not.toBeInTheDocument();
+    }
+  });
+
+  it('shows admin-only items for admin role', () => {
+    useAuthStore.setState({ role: 'admin', permissions: [] });
+    renderSidebar();
+    for (const item of [...publicItems, ...adminOnlyItems]) {
       expect(screen.getByText(item.label)).toBeInTheDocument();
     }
   });
 
   it('navigation links have correct hrefs', () => {
     renderSidebar();
-    for (const item of expectedItems) {
+    for (const item of publicItems) {
       const link = screen.getByText(item.label).closest('a');
       expect(link).toHaveAttribute('href', item.href);
     }
@@ -59,14 +82,19 @@ describe('Sidebar', () => {
 
   it('hides labels when collapsed', () => {
     renderSidebar(true);
-    for (const item of expectedItems) {
+    for (const item of publicItems) {
       expect(screen.queryByText(item.label)).not.toBeInTheDocument();
     }
   });
 
-  it('renders 27 navigation links', () => {
+  it('renders 25 links for non-admin', () => {
     renderSidebar();
-    const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(expectedItems.length);
+    expect(screen.getAllByRole('link')).toHaveLength(publicItems.length);
+  });
+
+  it('renders 27 links for admin', () => {
+    useAuthStore.setState({ role: 'admin', permissions: [] });
+    renderSidebar();
+    expect(screen.getAllByRole('link')).toHaveLength(publicItems.length + adminOnlyItems.length);
   });
 });

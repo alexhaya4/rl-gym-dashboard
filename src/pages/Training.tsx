@@ -19,6 +19,7 @@ import { trainingApi } from '../api/training';
 import { getWsUrl } from '../api/client';
 import type { TrainingStart, TrainingJob, TrainingResult } from '../types';
 import { extractError } from '../utils/extractError';
+import { PermissionGate } from '../components/PermissionGate';
 
 interface WsMetric {
   type: string;
@@ -148,10 +149,12 @@ export default function Training() {
             Manage and monitor training sessions
           </p>
         </div>
-        <Button onClick={() => setModalOpen(true)}>
-          <Play size={16} />
-          Start Training
-        </Button>
+        <PermissionGate permission="training:create">
+          <Button onClick={() => setModalOpen(true)}>
+            <Play size={16} />
+            Start Training
+          </Button>
+        </PermissionGate>
       </div>
 
       {selectedSession != null && (

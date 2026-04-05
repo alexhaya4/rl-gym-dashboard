@@ -8,6 +8,7 @@ import { Badge } from '../components/UI/Badge';
 import { Modal } from '../components/UI/Modal';
 import { organizationsApi } from '../api/organizations';
 import type { Organization } from '../types';
+import { PermissionGate } from '../components/PermissionGate';
 
 export default function Organizations() {
   const queryClient = useQueryClient();
@@ -61,10 +62,12 @@ export default function Organizations() {
             Manage your organizations and members
           </p>
         </div>
-        <Button onClick={() => setModalOpen(true)}>
-          <Plus size={16} />
-          Create Organization
-        </Button>
+        <PermissionGate permission="organizations:create">
+          <Button onClick={() => setModalOpen(true)}>
+            <Plus size={16} />
+            Create Organization
+          </Button>
+        </PermissionGate>
       </div>
 
       {/* Selected Org Detail */}

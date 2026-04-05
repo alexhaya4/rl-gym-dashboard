@@ -27,6 +27,8 @@ apiClient.interceptors.response.use(
     if (status === 401) {
       useAuthStore.getState().logout();
       window.location.href = '/login';
+    } else if (status === 403) {
+      useToastStore.getState().add("You don't have permission to perform this action", 'error');
     } else if (status && status >= 500) {
       useToastStore.getState().add('Server error, please try again', 'error');
     } else if (!error.response && error.message === 'Network Error') {

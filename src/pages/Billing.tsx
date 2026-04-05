@@ -5,6 +5,7 @@ import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
 import { Badge } from '../components/UI/Badge';
 import { billingApi } from '../api/billing';
+import { PermissionGate } from '../components/PermissionGate';
 
 export default function Billing() {
   const queryClient = useQueryClient();
@@ -173,15 +174,17 @@ export default function Billing() {
                     </li>
                   ))}
                 </ul>
-                <Button
-                  variant={plan.is_current ? 'secondary' : 'primary'}
-                  disabled={plan.is_current}
-                  onClick={() => checkoutMutation.mutate(plan.slug)}
-                  loading={checkoutMutation.isPending}
-                  className="w-full"
-                >
-                  {plan.is_current ? 'Current Plan' : 'Upgrade'}
-                </Button>
+                <PermissionGate permission="billing:manage">
+                  <Button
+                    variant={plan.is_current ? 'secondary' : 'primary'}
+                    disabled={plan.is_current}
+                    onClick={() => checkoutMutation.mutate(plan.slug)}
+                    loading={checkoutMutation.isPending}
+                    className="w-full"
+                  >
+                    {plan.is_current ? 'Current Plan' : 'Upgrade'}
+                  </Button>
+                </PermissionGate>
               </div>
             </Card>
           ))}

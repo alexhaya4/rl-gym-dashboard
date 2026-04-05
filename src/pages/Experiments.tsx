@@ -8,6 +8,7 @@ import { Badge } from '../components/UI/Badge';
 import { Modal } from '../components/UI/Modal';
 import { experimentsApi } from '../api/experiments';
 import type { ExperimentCreate } from '../types';
+import { PermissionGate } from '../components/PermissionGate';
 
 const statusVariant = (s: string) => {
   switch (s) {
@@ -231,14 +232,16 @@ export default function Experiments() {
                         <Button variant="ghost" size="sm" onClick={() => fetchEpisodes(exp.id)}>
                           <List size={13} />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteMutation.mutate(exp.id)}
-                          className="text-red-500"
-                        >
-                          <Trash2 size={13} />
-                        </Button>
+                        <PermissionGate permission="experiments:delete">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteMutation.mutate(exp.id)}
+                            className="text-red-500"
+                          >
+                            <Trash2 size={13} />
+                          </Button>
+                        </PermissionGate>
                       </div>
                     </td>
                   </tr>

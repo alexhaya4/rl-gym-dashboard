@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { oauthApi } from '../api/oauth';
+import { rbacApi } from '../api/rbac';
 import { useAuthStore } from '../store/authStore';
 
 export default function OAuthCallback() {
@@ -28,6 +29,14 @@ export default function OAuthCallback() {
           provider === 'google' ? oauthApi.googleCallback : oauthApi.githubCallback;
         const result = await callbackFn(code, state);
         setToken(result.access_token);
+        try {
+          const perms = await rbacApi.myPermissions();
+          const role = (perms.role as string) ?? 'viewer';
+          const permList = Array.isArray(perms.permissions) ? (perms.permissions as string[]) : [];
+          useAuthStore.getState().setRbac(role, permList);
+        } catch {
+          /* RBAC may not be available */
+        }
         navigate('/');
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Authentication failed');
