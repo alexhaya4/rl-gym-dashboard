@@ -13,7 +13,9 @@ export const benchmarksApi = {
   },
 
   algorithms: async (): Promise<{ name: string; description: string }[]> => {
-    const res = await apiClient.get<{ algorithms: { name: string; description: string }[] }>('/benchmarks/algorithms');
+    const res = await apiClient.get<{ algorithms: { name: string; description: string }[] }>(
+      '/benchmarks/algorithms'
+    );
     return res.data.algorithms;
   },
 };

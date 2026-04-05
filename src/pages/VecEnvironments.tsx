@@ -9,10 +9,14 @@ import { vecEnvironmentsApi } from '../api/vecEnvironments';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'active': return 'success' as const;
-    case 'ready': return 'info' as const;
-    case 'error': return 'error' as const;
-    default: return 'default' as const;
+    case 'active':
+      return 'success' as const;
+    case 'ready':
+      return 'info' as const;
+    case 'error':
+      return 'error' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -162,7 +166,9 @@ export default function VecEnvironments() {
         <Card>
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold">Step Results</h3>
-            <Button variant="ghost" size="sm" onClick={() => setStepResults(null)}>Close</Button>
+            <Button variant="ghost" size="sm" onClick={() => setStepResults(null)}>
+              Close
+            </Button>
           </div>
           <pre className="text-xs font-mono dark:bg-dark-bg bg-light-bg p-3 rounded-[var(--radius-card)] overflow-x-auto">
             {JSON.stringify(stepResults, null, 2)}
@@ -204,7 +210,12 @@ export default function VecEnvironments() {
                 </div>
                 <div className="space-y-2 border-t dark:border-dark-border border-light-border pt-3">
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => resetMutation.mutate(key)} loading={resetMutation.isPending}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => resetMutation.mutate(key)}
+                      loading={resetMutation.isPending}
+                    >
                       <RotateCcw size={14} />
                       Reset
                     </Button>
@@ -222,12 +233,18 @@ export default function VecEnvironments() {
                     <div className="flex-1">
                       <Input
                         label="Actions (JSON array)"
-                        placeholder='[0, 1, 0, 1]'
+                        placeholder="[0, 1, 0, 1]"
                         value={actionInputs[key] || ''}
-                        onChange={(e) => setActionInputs({ ...actionInputs, [key]: e.target.value })}
+                        onChange={(e) =>
+                          setActionInputs({ ...actionInputs, [key]: e.target.value })
+                        }
                       />
                     </div>
-                    <Button size="sm" onClick={() => handleStep(key)} loading={stepMutation.isPending}>
+                    <Button
+                      size="sm"
+                      onClick={() => handleStep(key)}
+                      loading={stepMutation.isPending}
+                    >
                       <Play size={14} />
                       Step
                     </Button>

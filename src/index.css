@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
@@ -29,12 +29,15 @@
   --radius-btn: 6px;
   --radius-input: 4px;
 
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "SF Mono", SFMono-Regular, ui-monospace, "Cascadia Code", Menlo, monospace;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
 }
 
 * {
-  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
 }
 
 html {
@@ -46,12 +49,12 @@ body {
   min-height: 100vh;
 }
 
-[data-theme="dark"] body {
+[data-theme='dark'] body {
   background-color: var(--color-dark-bg);
   color: var(--color-dark-text);
 }
 
-[data-theme="light"] body {
+[data-theme='light'] body {
   background-color: var(--color-light-bg);
   color: var(--color-light-text);
 }
@@ -65,20 +68,20 @@ body {
   height: 6px;
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-track {
+[data-theme='dark'] ::-webkit-scrollbar-track {
   background: var(--color-dark-bg);
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
   background: var(--color-dark-border);
   border-radius: 3px;
 }
 
-[data-theme="light"] ::-webkit-scrollbar-track {
+[data-theme='light'] ::-webkit-scrollbar-track {
   background: var(--color-light-bg);
 }
 
-[data-theme="light"] ::-webkit-scrollbar-thumb {
+[data-theme='light'] ::-webkit-scrollbar-thumb {
   background: var(--color-light-border);
   border-radius: 3px;
 }

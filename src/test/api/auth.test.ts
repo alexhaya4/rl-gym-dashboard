@@ -22,11 +22,9 @@ describe('authApi', () => {
 
     await authApi.login({ username: 'user', password: 'pass' });
 
-    expect(apiClient.post).toHaveBeenCalledWith(
-      '/auth/login',
-      expect.any(URLSearchParams),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-    );
+    expect(apiClient.post).toHaveBeenCalledWith('/auth/login', expect.any(URLSearchParams), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
 
     const body = vi.mocked(apiClient.post).mock.calls[0][1] as URLSearchParams;
     expect(body.get('username')).toBe('user');

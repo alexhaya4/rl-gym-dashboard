@@ -1,7 +1,15 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Settings, Play, TrendingUp } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
 import { Input } from '../components/UI/Input';
@@ -10,10 +18,14 @@ import { optimizationApi } from '../api/optimization';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'completed': return 'success' as const;
-    case 'running': return 'info' as const;
-    case 'failed': return 'error' as const;
-    default: return 'default' as const;
+    case 'completed':
+      return 'success' as const;
+    case 'running':
+      return 'info' as const;
+    case 'failed':
+      return 'error' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -57,10 +69,12 @@ export default function Optimization() {
     setSelectedStudy({ id, history, bestParams: bestTrial });
   }, []);
 
-  const chartData = selectedStudy?.history.map((h, i) => ({
-    trial_number: (h as Record<string, unknown>).trial_number ?? i + 1,
-    value: (h as Record<string, unknown>).value ?? (h as Record<string, unknown>).mean_reward ?? 0,
-  })) ?? [];
+  const chartData =
+    selectedStudy?.history.map((h, i) => ({
+      trial_number: (h as Record<string, unknown>).trial_number ?? i + 1,
+      value:
+        (h as Record<string, unknown>).value ?? (h as Record<string, unknown>).mean_reward ?? 0,
+    })) ?? [];
 
   return (
     <div className="space-y-6">
@@ -79,7 +93,9 @@ export default function Optimization() {
             <h3 className="text-sm font-semibold">Search Spaces</h3>
           </div>
           <div className="p-3 rounded-[var(--radius-card)] dark:bg-dark-bg bg-light-bg">
-            <pre className="text-xs font-mono whitespace-pre-wrap">{JSON.stringify(spaces, null, 2)}</pre>
+            <pre className="text-xs font-mono whitespace-pre-wrap">
+              {JSON.stringify(spaces, null, 2)}
+            </pre>
           </div>
         </Card>
       )}
@@ -95,7 +111,9 @@ export default function Optimization() {
           className="space-y-4"
         >
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Environment</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Environment
+            </label>
             <select
               value={form.environment_id}
               onChange={(e) => setForm({ ...form, environment_id: e.target.value })}
@@ -111,7 +129,9 @@ export default function Optimization() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Algorithm</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Algorithm
+            </label>
             <select
               value={form.algorithm}
               onChange={(e) => setForm({ ...form, algorithm: e.target.value })}
@@ -156,31 +176,58 @@ export default function Optimization() {
               <TrendingUp size={18} className="text-accent" />
               <h3 className="text-sm font-semibold">Study {selectedStudy.id} — Trial History</h3>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setSelectedStudy(null)}>Close</Button>
+            <Button variant="ghost" size="sm" onClick={() => setSelectedStudy(null)}>
+              Close
+            </Button>
           </div>
           {chartData.length > 0 ? (
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                  <XAxis dataKey="trial_number" stroke="#888" fontSize={12} label={{ value: 'Trial', position: 'insideBottom', offset: -5 }} />
-                  <YAxis stroke="#888" fontSize={12} label={{ value: 'Value', angle: -90, position: 'insideLeft' }} />
+                  <XAxis
+                    dataKey="trial_number"
+                    stroke="#888"
+                    fontSize={12}
+                    label={{ value: 'Trial', position: 'insideBottom', offset: -5 }}
+                  />
+                  <YAxis
+                    stroke="#888"
+                    fontSize={12}
+                    label={{ value: 'Value', angle: -90, position: 'insideLeft' }}
+                  />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #333', borderRadius: '8px' }}
+                    contentStyle={{
+                      backgroundColor: '#1a1a2e',
+                      border: '1px solid #333',
+                      borderRadius: '8px',
+                    }}
                     labelStyle={{ color: '#aaa' }}
                   />
-                  <Line type="monotone" dataKey="value" stroke="var(--color-accent)" strokeWidth={2} dot={{ r: 3 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="var(--color-accent)"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">No trial history available</p>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">
+              No trial history available
+            </p>
           )}
           {selectedStudy.bestParams && (
             <div className="mt-4">
-              <h4 className="text-xs font-semibold dark:text-dark-text-secondary text-light-text-secondary mb-2">Best Parameters</h4>
+              <h4 className="text-xs font-semibold dark:text-dark-text-secondary text-light-text-secondary mb-2">
+                Best Parameters
+              </h4>
               <div className="p-3 rounded-[var(--radius-card)] dark:bg-dark-bg bg-light-bg">
-                <pre className="text-xs font-mono whitespace-pre-wrap">{JSON.stringify(selectedStudy.bestParams, null, 2)}</pre>
+                <pre className="text-xs font-mono whitespace-pre-wrap">
+                  {JSON.stringify(selectedStudy.bestParams, null, 2)}
+                </pre>
               </div>
             </div>
           )}
@@ -205,7 +252,8 @@ export default function Optimization() {
                     {study.environment_id} — {study.algorithm}
                   </p>
                   <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
-                    {study.completed_trials}/{study.n_trials} trials &middot; metric: {study.optimization_metric}
+                    {study.completed_trials}/{study.n_trials} trials &middot; metric:{' '}
+                    {study.optimization_metric}
                     {study.best_value != null && ` · best: ${study.best_value.toFixed(4)}`}
                   </p>
                 </div>
@@ -214,7 +262,9 @@ export default function Optimization() {
             ))}
           </div>
         ) : (
-          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No studies yet</p>
+          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            No studies yet
+          </p>
         )}
       </Card>
     </div>

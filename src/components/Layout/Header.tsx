@@ -23,7 +23,11 @@ export function Header() {
   }, []);
 
   const handleLogout = async () => {
-    try { await authApi.logout(); } catch { /* proceed with local logout */ }
+    try {
+      await authApi.logout();
+    } catch {
+      /* proceed with local logout */
+    }
     logout();
     navigate('/login');
   };
@@ -55,7 +59,9 @@ export function Header() {
           <div className="absolute right-0 top-full mt-1 w-48 py-1 rounded-[var(--radius-card)] border shadow-lg dark:bg-dark-card dark:border-dark-border bg-light-card border-light-border z-50">
             <div className="px-3 py-2 border-b dark:border-dark-border border-light-border">
               <p className="text-sm font-medium">{user?.username}</p>
-              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">{user?.email}</p>
+              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                {user?.email}
+              </p>
             </div>
             <button
               onClick={handleLogout}

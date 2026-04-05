@@ -63,9 +63,7 @@ export default function Login() {
             {isRegister ? 'Create account' : 'Welcome back'}
           </h1>
           <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary mt-1">
-            {isRegister
-              ? 'Sign up for RL Gym Platform'
-              : 'Sign in to RL Gym Platform'}
+            {isRegister ? 'Sign up for RL Gym Platform' : 'Sign in to RL Gym Platform'}
           </p>
         </div>
 
@@ -98,9 +96,7 @@ export default function Login() {
               required
             />
 
-            {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
             <Button type="submit" className="w-full" loading={loading}>
               {isRegister ? 'Create account' : 'Sign in'}
@@ -113,7 +109,9 @@ export default function Login() {
                 <div className="w-full border-t dark:border-dark-border border-light-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-2 dark:bg-dark-card bg-light-card dark:text-dark-text-secondary text-light-text-secondary">or continue with</span>
+                <span className="px-2 dark:bg-dark-card bg-light-card dark:text-dark-text-secondary text-light-text-secondary">
+                  or continue with
+                </span>
               </div>
             </div>
 
@@ -157,9 +155,7 @@ export default function Login() {
               }}
               className="text-sm text-accent hover:text-accent-hover transition-colors cursor-pointer"
             >
-              {isRegister
-                ? 'Already have an account? Sign in'
-                : "Don't have an account? Sign up"}
+              {isRegister ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
           </div>
         </div>

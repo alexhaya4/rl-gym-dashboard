@@ -1,12 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  Grid3X3,
-  FlaskConical,
-  Play,
-  CheckCircle2,
-  Package,
-  TrendingUp,
-} from 'lucide-react';
+import { Grid3X3, FlaskConical, Play, CheckCircle2, Package, TrendingUp } from 'lucide-react';
 import { Card } from '../components/UI/Card';
 import { Badge } from '../components/UI/Badge';
 import { environmentsApi } from '../api/environments';
@@ -29,7 +22,9 @@ function StatCard({
       <div className="flex items-center gap-4">
         <div
           className={`w-10 h-10 rounded-[var(--radius-btn)] flex items-center justify-center ${
-            accent ? 'bg-accent/15 text-accent' : 'dark:bg-dark-hover bg-light-hover dark:text-dark-text-secondary text-light-text-secondary'
+            accent
+              ? 'bg-accent/15 text-accent'
+              : 'dark:bg-dark-hover bg-light-hover dark:text-dark-text-secondary text-light-text-secondary'
           }`}
         >
           <Icon size={20} />
@@ -45,11 +40,16 @@ function StatCard({
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'completed': return 'success' as const;
-    case 'running': return 'info' as const;
-    case 'failed': return 'error' as const;
-    case 'cancelled': return 'warning' as const;
-    default: return 'default' as const;
+    case 'completed':
+      return 'success' as const;
+    case 'running':
+      return 'info' as const;
+    case 'failed':
+      return 'error' as const;
+    case 'cancelled':
+      return 'warning' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -135,9 +135,12 @@ export default function Dashboard() {
                     className="flex items-center justify-between py-2 border-b last:border-b-0 dark:border-dark-border border-light-border"
                   >
                     <div>
-                      <p className="text-sm font-medium font-mono">{String(session.experiment_id)}</p>
+                      <p className="text-sm font-medium font-mono">
+                        {String(session.experiment_id)}
+                      </p>
                       <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
-                        {session.algorithm} on {session.environment_id} — {session.total_timesteps.toLocaleString()} timesteps
+                        {session.algorithm} on {session.environment_id} —{' '}
+                        {session.total_timesteps.toLocaleString()} timesteps
                       </p>
                     </div>
                     <Badge variant={statusVariant(session.status)}>{session.status}</Badge>

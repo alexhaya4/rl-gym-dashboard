@@ -44,9 +44,7 @@ function StatusCard({ title, icon, data, isLoading, isError }: StatusCardProps) 
               </span>
               <span className="text-xs font-mono">
                 {typeof value === 'boolean' ? (
-                  <Badge variant={value ? 'success' : 'error'}>
-                    {String(value)}
-                  </Badge>
+                  <Badge variant={value ? 'success' : 'error'}>{String(value)}</Badge>
                 ) : typeof value === 'object' && value !== null ? (
                   JSON.stringify(value)
                 ) : (

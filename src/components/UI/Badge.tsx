@@ -7,7 +7,8 @@ interface BadgeProps {
 }
 
 const variantStyles = {
-  default: 'dark:bg-dark-border dark:text-dark-text-secondary bg-light-border text-light-text-secondary',
+  default:
+    'dark:bg-dark-border dark:text-dark-text-secondary bg-light-border text-light-text-secondary',
   success: 'bg-emerald-500/15 text-emerald-400 dark:text-emerald-400',
   warning: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
   error: 'bg-red-500/15 text-red-600 dark:text-red-400',

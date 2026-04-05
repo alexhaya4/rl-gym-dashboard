@@ -37,12 +37,7 @@ export default function Inference() {
 
   const predictMutation = useMutation({
     mutationFn: () =>
-      inferenceApi.predict(
-        envId,
-        observations.map(Number),
-        algorithm,
-        deterministic,
-      ),
+      inferenceApi.predict(envId, observations.map(Number), algorithm, deterministic),
     onSuccess: (data) => {
       setResult(data);
       setError(null);
@@ -121,9 +116,12 @@ export default function Inference() {
                   <option key={alg.name} value={alg.name}>
                     {alg.name}
                   </option>
-                )) ?? ['PPO', 'A2C', 'DQN', 'SAC', 'TD3'].map((a) => (
-                  <option key={a} value={a}>{a}</option>
-                ))}
+                )) ??
+                  ['PPO', 'A2C', 'DQN', 'SAC', 'TD3'].map((a) => (
+                    <option key={a} value={a}>
+                      {a}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -135,7 +133,10 @@ export default function Inference() {
                 onChange={(e) => setDeterministic(e.target.checked)}
                 className="rounded"
               />
-              <label htmlFor="deterministic" className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+              <label
+                htmlFor="deterministic"
+                className="text-sm dark:text-dark-text-secondary text-light-text-secondary"
+              >
                 Deterministic
               </label>
             </div>
@@ -181,23 +182,33 @@ export default function Inference() {
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Action</p>
+                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                    Action
+                  </p>
                   <p className="font-mono font-bold text-lg text-accent">
                     {Array.isArray(result.action) ? `[${result.action.join(', ')}]` : result.action}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Probability</p>
+                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                    Probability
+                  </p>
                   <p className="font-mono font-bold text-lg">
-                    {result.action_probability != null ? `${(result.action_probability * 100).toFixed(1)}%` : '—'}
+                    {result.action_probability != null
+                      ? `${(result.action_probability * 100).toFixed(1)}%`
+                      : '—'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Latency</p>
+                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                    Latency
+                  </p>
                   <p className="font-mono">{result.latency_ms.toFixed(1)} ms</p>
                 </div>
                 <div>
-                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Algorithm</p>
+                  <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                    Algorithm
+                  </p>
                   <p className="font-mono">{result.algorithm}</p>
                 </div>
               </div>
@@ -236,19 +247,34 @@ export default function Inference() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Environment</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Algorithm</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Model Path</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Memory</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Loaded At</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Environment
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Algorithm
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Model Path
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Memory
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Loaded At
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {cache.map((item, i) => (
-                  <tr key={i} className="border-b last:border-b-0 dark:border-dark-border border-light-border">
+                  <tr
+                    key={i}
+                    className="border-b last:border-b-0 dark:border-dark-border border-light-border"
+                  >
                     <td className="px-5 py-3 font-mono text-xs">{item.environment_id}</td>
                     <td className="px-5 py-3 font-mono text-xs">{item.algorithm}</td>
-                    <td className="px-5 py-3 font-mono text-xs truncate max-w-[200px]">{item.model_path}</td>
+                    <td className="px-5 py-3 font-mono text-xs truncate max-w-[200px]">
+                      {item.model_path}
+                    </td>
                     <td className="px-5 py-3 font-mono text-xs">{item.memory_mb.toFixed(1)} MB</td>
                     <td className="px-5 py-3 text-xs dark:text-dark-text-secondary text-light-text-secondary">
                       {new Date(item.loaded_at).toLocaleString()}
@@ -260,7 +286,9 @@ export default function Inference() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No cached models</p>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+              No cached models
+            </p>
           </div>
         )}
       </Card>

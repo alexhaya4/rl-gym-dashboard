@@ -27,7 +27,9 @@ export default function Algorithms() {
     try {
       const res = await apiClient.get<Algorithm>(`/algorithms/${name}`);
       setDetail(res.data);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   return (
@@ -60,17 +62,24 @@ export default function Algorithms() {
         <Card>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold">{detail.name} — Detail</h3>
-            <Button variant="ghost" size="sm" onClick={() => setDetail(null)}>Close</Button>
+            <Button variant="ghost" size="sm" onClick={() => setDetail(null)}>
+              Close
+            </Button>
           </div>
-          <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary mb-3">{String(detail.description)}</p>
-          {detail.hyperparameters_schema && Object.keys(detail.hyperparameters_schema).length > 0 && (
-            <div className="p-2 rounded-[var(--radius-input)] dark:bg-dark-bg bg-light-bg">
-              <p className="text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary mb-1">Hyperparameters Schema</p>
-              <pre className="text-xs font-mono dark:text-dark-text text-light-text overflow-x-auto">
-                {JSON.stringify(detail.hyperparameters_schema, null, 2)}
-              </pre>
-            </div>
-          )}
+          <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary mb-3">
+            {String(detail.description)}
+          </p>
+          {detail.hyperparameters_schema &&
+            Object.keys(detail.hyperparameters_schema).length > 0 && (
+              <div className="p-2 rounded-[var(--radius-input)] dark:bg-dark-bg bg-light-bg">
+                <p className="text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary mb-1">
+                  Hyperparameters Schema
+                </p>
+                <pre className="text-xs font-mono dark:text-dark-text text-light-text overflow-x-auto">
+                  {JSON.stringify(detail.hyperparameters_schema, null, 2)}
+                </pre>
+              </div>
+            )}
         </Card>
       )}
 
@@ -104,21 +113,29 @@ export default function Algorithms() {
                   {algo.supported_spaces && algo.supported_spaces.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {algo.supported_spaces.map((s: string) => (
-                        <Badge key={s} variant="default">{s}</Badge>
+                        <Badge key={s} variant="default">
+                          {s}
+                        </Badge>
                       ))}
                     </div>
                   )}
-                  {algo.hyperparameters_schema && Object.keys(algo.hyperparameters_schema).length > 0 && (
-                    <div className="p-2 rounded-[var(--radius-input)] dark:bg-dark-bg bg-light-bg">
-                      <p className="text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary mb-1">
-                        Hyperparameters
-                      </p>
-                      <pre className="text-xs font-mono dark:text-dark-text text-light-text overflow-x-auto">
-                        {JSON.stringify(algo.hyperparameters_schema, null, 2)}
-                      </pre>
-                    </div>
-                  )}
-                  <Button variant="ghost" size="sm" className="mt-2" onClick={() => fetchDetail(algo.name)}>
+                  {algo.hyperparameters_schema &&
+                    Object.keys(algo.hyperparameters_schema).length > 0 && (
+                      <div className="p-2 rounded-[var(--radius-input)] dark:bg-dark-bg bg-light-bg">
+                        <p className="text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary mb-1">
+                          Hyperparameters
+                        </p>
+                        <pre className="text-xs font-mono dark:text-dark-text text-light-text overflow-x-auto">
+                          {JSON.stringify(algo.hyperparameters_schema, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => fetchDetail(algo.name)}
+                  >
                     View Detail
                   </Button>
                 </div>
@@ -130,7 +147,9 @@ export default function Algorithms() {
         <Card>
           <div className="text-center py-8">
             <p className="dark:text-dark-text-secondary text-light-text-secondary">
-              {envFilter ? 'No compatible algorithms for this environment' : 'No algorithms available'}
+              {envFilter
+                ? 'No compatible algorithms for this environment'
+                : 'No algorithms available'}
             </p>
           </div>
         </Card>

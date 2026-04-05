@@ -14,8 +14,14 @@ export const organizationsApi = {
     const res = await apiClient.get<Organization>(`/organizations/${id}`);
     return res.data;
   },
-  addMember: async (orgId: number, data: { user_id: number; role: string }): Promise<Record<string, unknown>> => {
-    const res = await apiClient.post<Record<string, unknown>>(`/organizations/${orgId}/members`, data);
+  addMember: async (
+    orgId: number,
+    data: { user_id: number; role: string }
+  ): Promise<Record<string, unknown>> => {
+    const res = await apiClient.post<Record<string, unknown>>(
+      `/organizations/${orgId}/members`,
+      data
+    );
     return res.data;
   },
   removeMember: async (orgId: number, userId: number): Promise<void> => {

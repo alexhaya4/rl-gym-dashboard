@@ -2,7 +2,11 @@ import { apiClient, getItems } from './client';
 import type { RegistryEntry } from '../types';
 
 export const registryApi = {
-  register: async (data: { model_version_id: number; environment_id: string; algorithm: string }): Promise<RegistryEntry> => {
+  register: async (data: {
+    model_version_id: number;
+    environment_id: string;
+    algorithm: string;
+  }): Promise<RegistryEntry> => {
     const res = await apiClient.post<RegistryEntry>('/registry/register', null, {
       params: data,
     });
@@ -21,7 +25,10 @@ export const registryApi = {
     return res.data;
   },
 
-  promote: async (registryId: number, data: { model_version_id: number; target_stage: string }): Promise<RegistryEntry> => {
+  promote: async (
+    registryId: number,
+    data: { model_version_id: number; target_stage: string }
+  ): Promise<RegistryEntry> => {
     const res = await apiClient.post<RegistryEntry>(`/registry/${registryId}/promote`, data);
     return res.data;
   },

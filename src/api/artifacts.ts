@@ -2,7 +2,13 @@ import { apiClient, getItems } from './client';
 import type { Artifact } from '../types';
 
 export const artifactsApi = {
-  create: async (data: { name: string; type: string; uri: string; description?: string; experiment_id?: number }): Promise<Artifact> => {
+  create: async (data: {
+    name: string;
+    type: string;
+    uri: string;
+    description?: string;
+    experiment_id?: number;
+  }): Promise<Artifact> => {
     const res = await apiClient.post<Artifact>('/artifacts/', data);
     return res.data;
   },
@@ -19,7 +25,15 @@ export const artifactsApi = {
   delete: async (id: number): Promise<void> => {
     await apiClient.delete(`/artifacts/${id}`);
   },
-  lineage: async (id: number, data: { parent_experiment_id: number; child_experiment_id: number; relationship_type: string; description?: string }): Promise<Record<string, unknown>> => {
+  lineage: async (
+    id: number,
+    data: {
+      parent_experiment_id: number;
+      child_experiment_id: number;
+      relationship_type: string;
+      description?: string;
+    }
+  ): Promise<Record<string, unknown>> => {
     const res = await apiClient.post<Record<string, unknown>>(`/artifacts/${id}/lineage`, data);
     return res.data;
   },

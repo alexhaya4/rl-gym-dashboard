@@ -11,10 +11,14 @@ import type { AgentPolicy } from '../types';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'completed': return 'success' as const;
-    case 'running': return 'info' as const;
-    case 'failed': return 'error' as const;
-    default: return 'default' as const;
+    case 'completed':
+      return 'success' as const;
+    case 'running':
+      return 'info' as const;
+    case 'failed':
+      return 'error' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -26,7 +30,9 @@ export default function MultiAgent() {
     total_timesteps: 100000,
     algorithms: '{}',
   });
-  const [agentsModal, setAgentsModal] = useState<{ id: number; agents: AgentPolicy[] } | null>(null);
+  const [agentsModal, setAgentsModal] = useState<{ id: number; agents: AgentPolicy[] } | null>(
+    null
+  );
 
   const { data: environments, isLoading: envsLoading } = useQuery({
     queryKey: ['multi-agent-environments'],
@@ -82,12 +88,16 @@ export default function MultiAgent() {
           <div className="flex flex-wrap gap-2">
             {environments.map((env, i) => (
               <Badge key={i} variant="accent">
-                {(env as Record<string, unknown>).id as string ?? (env as Record<string, unknown>).name as string ?? JSON.stringify(env)}
+                {((env as Record<string, unknown>).id as string) ??
+                  ((env as Record<string, unknown>).name as string) ??
+                  JSON.stringify(env)}
               </Badge>
             ))}
           </div>
         ) : (
-          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No environments available</p>
+          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            No environments available
+          </p>
         )}
       </Card>
 
@@ -102,7 +112,9 @@ export default function MultiAgent() {
           className="space-y-4"
         >
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Environment</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Environment
+            </label>
             <select
               value={form.environment_id}
               onChange={(e) => setForm({ ...form, environment_id: e.target.value })}
@@ -111,10 +123,12 @@ export default function MultiAgent() {
             >
               <option value="">Select environment...</option>
               {environments?.map((env, i) => {
-                const envId = (env as Record<string, unknown>).id as string ?? String(i);
-                const envName = (env as Record<string, unknown>).name as string ?? envId;
+                const envId = ((env as Record<string, unknown>).id as string) ?? String(i);
+                const envName = ((env as Record<string, unknown>).name as string) ?? envId;
                 return (
-                  <option key={i} value={envId}>{envName}</option>
+                  <option key={i} value={envId}>
+                    {envName}
+                  </option>
                 );
               })}
             </select>
@@ -137,7 +151,9 @@ export default function MultiAgent() {
             required
           />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Algorithm Mapping (JSON)</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Algorithm Mapping (JSON)
+            </label>
             <textarea
               value={form.algorithms}
               onChange={(e) => setForm({ ...form, algorithms: e.target.value })}
@@ -172,7 +188,8 @@ export default function MultiAgent() {
                   <div>
                     <p className="text-sm font-medium">{exp.environment_id}</p>
                     <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
-                      {exp.n_agents} agents &middot; {exp.total_timesteps.toLocaleString()} timesteps
+                      {exp.n_agents} agents &middot; {exp.total_timesteps.toLocaleString()}{' '}
+                      timesteps
                     </p>
                   </div>
                 </div>
@@ -187,40 +204,65 @@ export default function MultiAgent() {
             ))}
           </div>
         ) : (
-          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No experiments yet</p>
+          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            No experiments yet
+          </p>
         )}
       </Card>
 
       {/* Agents modal */}
       {agentsModal && (
-        <Modal open={true} onClose={() => setAgentsModal(null)} title={`Agents — Experiment ${agentsModal.id}`}>
+        <Modal
+          open={true}
+          onClose={() => setAgentsModal(null)}
+          title={`Agents — Experiment ${agentsModal.id}`}
+        >
           {agentsModal.agents.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b dark:border-dark-border border-light-border">
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Agent ID</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Algorithm</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Mean Reward</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Episodes</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Status</th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Agent ID
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Algorithm
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Mean Reward
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Episodes
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {agentsModal.agents.map((agent) => (
-                    <tr key={agent.agent_id} className="border-b last:border-b-0 dark:border-dark-border border-light-border">
+                    <tr
+                      key={agent.agent_id}
+                      className="border-b last:border-b-0 dark:border-dark-border border-light-border"
+                    >
                       <td className="px-4 py-2 font-mono text-xs">{agent.agent_id}</td>
                       <td className="px-4 py-2 text-xs">{agent.algorithm}</td>
-                      <td className="px-4 py-2 font-mono text-xs">{agent.mean_reward?.toFixed(2) ?? '—'}</td>
+                      <td className="px-4 py-2 font-mono text-xs">
+                        {agent.mean_reward?.toFixed(2) ?? '—'}
+                      </td>
                       <td className="px-4 py-2 font-mono text-xs">{agent.episodes_completed}</td>
-                      <td className="px-4 py-2"><Badge variant={statusVariant(agent.status)}>{agent.status}</Badge></td>
+                      <td className="px-4 py-2">
+                        <Badge variant={statusVariant(agent.status)}>{agent.status}</Badge>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">No agents data available</p>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">
+              No agents data available
+            </p>
           )}
         </Modal>
       )}

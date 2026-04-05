@@ -56,7 +56,9 @@ export default function RBAC() {
           <div className="flex flex-wrap gap-2">
             {Object.entries(permissions).map(([key, value]) => (
               <div key={key} className="p-2 rounded-lg dark:bg-dark-bg bg-light-bg text-sm">
-                <span className="dark:text-dark-text-secondary text-light-text-secondary">{key}:</span>{' '}
+                <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                  {key}:
+                </span>{' '}
                 <span className="font-mono text-xs">{String(value)}</span>
               </div>
             ))}
@@ -72,11 +74,15 @@ export default function RBAC() {
         {roles.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {roles.map((role) => (
-              <Badge key={role} variant="info">{role}</Badge>
+              <Badge key={role} variant="info">
+                {role}
+              </Badge>
             ))}
           </div>
         ) : (
-          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No roles available</p>
+          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            No roles available
+          </p>
         )}
       </Card>
 
@@ -89,7 +95,9 @@ export default function RBAC() {
             assignMutation.mutate({
               user_id: assignForm.user_id,
               role: assignForm.role,
-              organization_id: assignForm.organization_id ? Number(assignForm.organization_id) : undefined,
+              organization_id: assignForm.organization_id
+                ? Number(assignForm.organization_id)
+                : undefined,
             });
           }}
           className="grid grid-cols-1 md:grid-cols-3 gap-4"
@@ -102,7 +110,9 @@ export default function RBAC() {
             required
           />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Role</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Role
+            </label>
             <select
               value={assignForm.role}
               onChange={(e) => setAssignForm({ ...assignForm, role: e.target.value })}
@@ -111,7 +121,9 @@ export default function RBAC() {
             >
               <option value="">Select role...</option>
               {roles.map((role) => (
-                <option key={role} value={role}>{role}</option>
+                <option key={role} value={role}>
+                  {role}
+                </option>
               ))}
             </select>
           </div>
@@ -122,7 +134,9 @@ export default function RBAC() {
             onChange={(e) => setAssignForm({ ...assignForm, organization_id: e.target.value })}
           />
           <div className="md:col-span-3 flex justify-end">
-            <Button type="submit" loading={assignMutation.isPending}>Assign Role</Button>
+            <Button type="submit" loading={assignMutation.isPending}>
+              Assign Role
+            </Button>
           </div>
         </form>
         {assignMutation.isSuccess && (
@@ -152,7 +166,9 @@ export default function RBAC() {
               required
             />
           </div>
-          <Button type="submit" loading={checkMutation.isPending}>Check</Button>
+          <Button type="submit" loading={checkMutation.isPending}>
+            Check
+          </Button>
         </form>
         {checkResult && (
           <div className="mt-4 flex items-center gap-2">

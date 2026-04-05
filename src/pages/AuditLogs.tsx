@@ -11,11 +11,15 @@ import type { AuditLog } from '../types';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'success': return 'success' as const;
+    case 'success':
+      return 'success' as const;
     case 'failure':
-    case 'error': return 'error' as const;
-    case 'warning': return 'warning' as const;
-    default: return 'default' as const;
+    case 'error':
+      return 'error' as const;
+    case 'warning':
+      return 'warning' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -62,7 +66,9 @@ export default function AuditLogs() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm dark:text-dark-text-secondary text-light-text-secondary">My Logs</span>
+          <span className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            My Logs
+          </span>
           <button
             type="button"
             onClick={() => setMyLogs(!myLogs)}
@@ -133,11 +139,21 @@ export default function AuditLogs() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
-                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">Event Type</th>
-                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">Action</th>
-                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">Status</th>
-                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">IP Address</th>
-                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">Created At</th>
+                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                    Event Type
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                    Action
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                    Status
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                    IP Address
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                    Created At
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -206,7 +222,9 @@ export default function AuditLogs() {
                   {key}
                 </span>
                 <span className="text-sm font-mono break-all">
-                  {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value ?? '-')}
+                  {typeof value === 'object'
+                    ? JSON.stringify(value, null, 2)
+                    : String(value ?? '-')}
                 </span>
               </div>
             ))}

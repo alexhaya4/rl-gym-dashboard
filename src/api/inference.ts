@@ -6,19 +6,17 @@ export const inferenceApi = {
     environmentId: string,
     observation: number[],
     algorithm?: string,
-    deterministic?: boolean,
+    deterministic?: boolean
   ): Promise<InferenceResponse> => {
-    const res = await apiClient.post<InferenceResponse>(
-      `/inference/${environmentId}/predict`,
-      { observation, algorithm, deterministic },
-    );
+    const res = await apiClient.post<InferenceResponse>(`/inference/${environmentId}/predict`, {
+      observation,
+      algorithm,
+      deterministic,
+    });
     return res.data;
   },
 
-  getInfo: async (
-    environmentId: string,
-    algorithm?: string,
-  ): Promise<Record<string, unknown>> => {
+  getInfo: async (environmentId: string, algorithm?: string): Promise<Record<string, unknown>> => {
     const res = await apiClient.get(`/inference/${environmentId}/info`, {
       params: algorithm ? { algorithm } : undefined,
     });

@@ -10,17 +10,25 @@ import type { EnvironmentCreate, StepResult, ResetResult } from '../types';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'active': return 'success' as const;
-    case 'ready': return 'info' as const;
-    case 'error': return 'error' as const;
-    default: return 'default' as const;
+    case 'active':
+      return 'success' as const;
+    case 'ready':
+      return 'info' as const;
+    case 'error':
+      return 'error' as const;
+    default:
+      return 'default' as const;
   }
 };
 
 export default function Environments() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [stepResult, setStepResult] = useState<{ envKey: string; data: StepResult | ResetResult; type: 'step' | 'reset' } | null>(null);
+  const [stepResult, setStepResult] = useState<{
+    envKey: string;
+    data: StepResult | ResetResult;
+    type: 'step' | 'reset';
+  } | null>(null);
   const [form, setForm] = useState<EnvironmentCreate>({
     environment_id: 'CartPole-v1',
     render_mode: null,
@@ -54,7 +62,8 @@ export default function Environments() {
   });
 
   const stepMutation = useMutation({
-    mutationFn: ({ envKey, action }: { envKey: string; action: number }) => environmentsApi.step(envKey, action),
+    mutationFn: ({ envKey, action }: { envKey: string; action: number }) =>
+      environmentsApi.step(envKey, action),
     onSuccess: (data, { envKey }) => {
       queryClient.invalidateQueries({ queryKey: ['environments'] });
       setStepResult({ envKey, data, type: 'step' });
@@ -80,9 +89,12 @@ export default function Environments() {
         <Card>
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold">
-              {stepResult.type === 'reset' ? 'Reset' : 'Step'} Result — <span className="font-mono text-accent">{stepResult.envKey}</span>
+              {stepResult.type === 'reset' ? 'Reset' : 'Step'} Result —{' '}
+              <span className="font-mono text-accent">{stepResult.envKey}</span>
             </h3>
-            <Button variant="ghost" size="sm" onClick={() => setStepResult(null)}>Close</Button>
+            <Button variant="ghost" size="sm" onClick={() => setStepResult(null)}>
+              Close
+            </Button>
           </div>
           <pre className="text-xs font-mono dark:bg-dark-bg bg-light-bg p-3 rounded-[var(--radius-card)] overflow-x-auto">
             {JSON.stringify(stepResult.data, null, 2)}
@@ -120,11 +132,21 @@ export default function Environments() {
                 {env.action_space && <p>Act: {JSON.stringify(env.action_space)}</p>}
               </div>
               <div className="flex gap-2 mt-4 pt-3 border-t dark:border-dark-border border-light-border">
-                <Button variant="ghost" size="sm" onClick={() => resetMutation.mutate(env.env_key)} loading={resetMutation.isPending}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => resetMutation.mutate(env.env_key)}
+                  loading={resetMutation.isPending}
+                >
                   <RotateCcw size={14} />
                   Reset
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => stepMutation.mutate({ envKey: env.env_key, action: 0 })} loading={stepMutation.isPending}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => stepMutation.mutate({ envKey: env.env_key, action: 0 })}
+                  loading={stepMutation.isPending}
+                >
                   <StepForward size={14} />
                   Step
                 </Button>

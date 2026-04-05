@@ -40,7 +40,8 @@ export default function Comparison() {
   });
 
   const exportMutation = useMutation({
-    mutationFn: ({ id, format }: { id: number; format: string }) => comparisonApi.exportExperiment(id, format),
+    mutationFn: ({ id, format }: { id: number; format: string }) =>
+      comparisonApi.exportExperiment(id, format),
     onSuccess: (blob) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -52,9 +53,7 @@ export default function Comparison() {
   });
 
   const toggleExperiment = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   return (
@@ -89,12 +88,16 @@ export default function Comparison() {
                 />
                 <span className="font-mono text-xs">{exp.id}</span>
                 <span className="text-sm">{exp.name}</span>
-                <Badge variant={exp.status === 'completed' ? 'success' : 'default'}>{exp.status}</Badge>
+                <Badge variant={exp.status === 'completed' ? 'success' : 'default'}>
+                  {exp.status}
+                </Badge>
               </label>
             ))}
           </div>
         ) : (
-          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No experiments found</p>
+          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            No experiments found
+          </p>
         )}
         <div className="mt-4">
           <Button
@@ -116,13 +119,20 @@ export default function Comparison() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
-                  <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Key</th>
-                  <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Value</th>
+                  <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Key
+                  </th>
+                  <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Value
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {Object.entries(compareMutation.data).map(([key, value]) => (
-                  <tr key={key} className="border-b last:border-b-0 dark:border-dark-border border-light-border">
+                  <tr
+                    key={key}
+                    className="border-b last:border-b-0 dark:border-dark-border border-light-border"
+                  >
                     <td className="px-4 py-2 font-mono text-xs">{key}</td>
                     <td className="px-4 py-2 font-mono text-xs">{JSON.stringify(value)}</td>
                   </tr>
@@ -166,7 +176,9 @@ export default function Comparison() {
         </div>
         {diffMutation.data && (
           <div className="mt-4 p-3 rounded-[var(--radius-card)] dark:bg-dark-bg bg-light-bg">
-            <pre className="text-xs font-mono whitespace-pre-wrap">{JSON.stringify(diffMutation.data, null, 2)}</pre>
+            <pre className="text-xs font-mono whitespace-pre-wrap">
+              {JSON.stringify(diffMutation.data, null, 2)}
+            </pre>
           </div>
         )}
       </Card>
@@ -197,7 +209,9 @@ export default function Comparison() {
         </div>
         {lineageMutation.data && (
           <div className="mt-4 p-3 rounded-[var(--radius-card)] dark:bg-dark-bg bg-light-bg">
-            <pre className="text-xs font-mono whitespace-pre-wrap">{JSON.stringify(lineageMutation.data, null, 2)}</pre>
+            <pre className="text-xs font-mono whitespace-pre-wrap">
+              {JSON.stringify(lineageMutation.data, null, 2)}
+            </pre>
           </div>
         )}
       </Card>
@@ -225,7 +239,10 @@ export default function Comparison() {
           <Button
             onClick={() => {
               if (tagExpId !== '') {
-                const tags = tagInput.split(',').map((t) => t.trim()).filter(Boolean);
+                const tags = tagInput
+                  .split(',')
+                  .map((t) => t.trim())
+                  .filter(Boolean);
                 tagsMutation.mutate({ id: tagExpId, tags });
               }
             }}
@@ -257,7 +274,9 @@ export default function Comparison() {
             placeholder="ID"
           />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Format</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Format
+            </label>
             <select
               value={exportFormat}
               onChange={(e) => setExportFormat(e.target.value)}

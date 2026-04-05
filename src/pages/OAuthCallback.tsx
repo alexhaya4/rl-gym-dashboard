@@ -24,9 +24,8 @@ export default function OAuthCallback() {
       }
       const provider = state.startsWith('google') ? 'google' : 'github';
       try {
-        const callbackFn = provider === 'google'
-          ? oauthApi.googleCallback
-          : oauthApi.githubCallback;
+        const callbackFn =
+          provider === 'google' ? oauthApi.googleCallback : oauthApi.githubCallback;
         const result = await callbackFn(code, state);
         setToken(result.access_token);
         navigate('/');
@@ -46,18 +45,26 @@ export default function OAuthCallback() {
             <span className="text-red-400 text-xl">!</span>
           </div>
           <p className="text-sm text-red-400">{error}</p>
-          <Link
-            to="/login"
-            className="text-sm text-accent hover:underline"
-          >
+          <Link to="/login" className="text-sm text-accent hover:underline">
             Back to Login
           </Link>
         </div>
       ) : (
         <div className="text-center space-y-4">
           <svg className="animate-spin h-8 w-8 mx-auto text-accent" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
           </svg>
           <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
             Completing authentication...

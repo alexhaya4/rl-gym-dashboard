@@ -60,17 +60,26 @@ export default function Billing() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Plan</p>
+              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                Plan
+              </p>
               <p className="font-semibold mt-1">{subscription.plan}</p>
             </div>
             <div>
-              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Status</p>
-              <Badge variant={subscription.status === 'active' ? 'success' : 'warning'} className="mt-1">
+              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                Status
+              </p>
+              <Badge
+                variant={subscription.status === 'active' ? 'success' : 'warning'}
+                className="mt-1"
+              >
                 {subscription.status}
               </Badge>
             </div>
             <div>
-              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Period End</p>
+              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                Period End
+              </p>
               <p className="text-sm mt-1">
                 {subscription.current_period_end
                   ? new Date(subscription.current_period_end).toLocaleDateString()
@@ -78,8 +87,13 @@ export default function Billing() {
               </p>
             </div>
             <div>
-              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Auto-Renew</p>
-              <Badge variant={subscription.cancel_at_period_end ? 'warning' : 'success'} className="mt-1">
+              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                Auto-Renew
+              </p>
+              <Badge
+                variant={subscription.cancel_at_period_end ? 'warning' : 'success'}
+                className="mt-1"
+              >
                 {subscription.cancel_at_period_end ? 'Cancelling' : 'Active'}
               </Badge>
             </div>
@@ -91,7 +105,12 @@ export default function Billing() {
               <div className="flex items-center gap-3">
                 <AlertTriangle size={16} className="text-amber-400" />
                 <span className="text-sm">Are you sure you want to cancel?</span>
-                <Button variant="danger" size="sm" onClick={() => cancelMutation.mutate()} loading={cancelMutation.isPending}>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => cancelMutation.mutate()}
+                  loading={cancelMutation.isPending}
+                >
                   Confirm Cancel
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => setConfirmCancel(false)}>
@@ -99,7 +118,12 @@ export default function Billing() {
                 </Button>
               </div>
             ) : (
-              <Button variant="ghost" size="sm" onClick={() => setConfirmCancel(true)} className="text-red-500">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setConfirmCancel(true)}
+                className="text-red-500"
+              >
                 Cancel Subscription
               </Button>
             )}
@@ -136,7 +160,9 @@ export default function Billing() {
                   </div>
                   <p className="text-2xl font-bold">
                     ${plan.price_monthly}
-                    <span className="text-sm font-normal dark:text-dark-text-secondary text-light-text-secondary">/mo</span>
+                    <span className="text-sm font-normal dark:text-dark-text-secondary text-light-text-secondary">
+                      /mo
+                    </span>
                   </p>
                 </div>
                 <ul className="space-y-2 mb-6 flex-1">
@@ -163,7 +189,9 @@ export default function Billing() {
       ) : (
         <Card>
           <div className="text-center py-8">
-            <p className="dark:text-dark-text-secondary text-light-text-secondary">No plans available</p>
+            <p className="dark:text-dark-text-secondary text-light-text-secondary">
+              No plans available
+            </p>
           </div>
         </Card>
       )}

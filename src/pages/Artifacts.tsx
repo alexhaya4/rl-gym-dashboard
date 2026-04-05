@@ -10,11 +10,16 @@ import { artifactsApi } from '../api/artifacts';
 
 const typeVariant = (t: string) => {
   switch (t) {
-    case 'model': return 'accent' as const;
-    case 'dataset': return 'info' as const;
-    case 'checkpoint': return 'warning' as const;
-    case 'log': return 'default' as const;
-    default: return 'default' as const;
+    case 'model':
+      return 'accent' as const;
+    case 'dataset':
+      return 'info' as const;
+    case 'checkpoint':
+      return 'warning' as const;
+    case 'log':
+      return 'default' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -84,11 +89,21 @@ export default function Artifacts() {
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
                   <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider w-8" />
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Name</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Type</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">URI</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Experiment</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Created</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    URI
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Experiment
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Created
+                  </th>
                   <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider w-16" />
                 </tr>
               </thead>
@@ -101,11 +116,19 @@ export default function Artifacts() {
                       onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
                     >
                       <td className="px-5 py-3">
-                        {expandedId === a.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        {expandedId === a.id ? (
+                          <ChevronDown size={14} />
+                        ) : (
+                          <ChevronRight size={14} />
+                        )}
                       </td>
                       <td className="px-5 py-3 font-medium">{a.name}</td>
-                      <td className="px-5 py-3"><Badge variant={typeVariant(a.type)}>{a.type}</Badge></td>
-                      <td className="px-5 py-3 font-mono text-xs max-w-[200px] truncate">{a.uri}</td>
+                      <td className="px-5 py-3">
+                        <Badge variant={typeVariant(a.type)}>{a.type}</Badge>
+                      </td>
+                      <td className="px-5 py-3 font-mono text-xs max-w-[200px] truncate">
+                        {a.uri}
+                      </td>
                       <td className="px-5 py-3 font-mono text-xs">{a.experiment_id ?? '—'}</td>
                       <td className="px-5 py-3 text-xs dark:text-dark-text-secondary text-light-text-secondary">
                         {new Date(a.created_at).toLocaleDateString()}
@@ -125,35 +148,52 @@ export default function Artifacts() {
                       </td>
                     </tr>
                     {expandedId === a.id && (
-                      <tr key={`${a.id}-detail`} className="border-b dark:border-dark-border border-light-border">
+                      <tr
+                        key={`${a.id}-detail`}
+                        className="border-b dark:border-dark-border border-light-border"
+                      >
                         <td colSpan={7} className="px-5 py-4">
                           <div className="grid grid-cols-2 gap-4 text-xs">
                             <div>
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">ID:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                ID:
+                              </span>{' '}
                               <span className="font-mono font-bold">{a.id}</span>
                             </div>
                             <div>
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">Name:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                Name:
+                              </span>{' '}
                               <span className="font-bold">{a.name}</span>
                             </div>
                             <div>
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">Type:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                Type:
+                              </span>{' '}
                               <Badge variant={typeVariant(a.type)}>{a.type}</Badge>
                             </div>
                             <div>
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">URI:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                URI:
+                              </span>{' '}
                               <span className="font-mono">{a.uri}</span>
                             </div>
                             <div className="col-span-2">
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">Description:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                Description:
+                              </span>{' '}
                               <span>{a.description || '—'}</span>
                             </div>
                             <div>
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">Experiment ID:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                Experiment ID:
+                              </span>{' '}
                               <span className="font-mono">{a.experiment_id ?? '—'}</span>
                             </div>
                             <div>
-                              <span className="dark:text-dark-text-secondary text-light-text-secondary">Created:</span>{' '}
+                              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                                Created:
+                              </span>{' '}
                               <span>{new Date(a.created_at).toLocaleString()}</span>
                             </div>
                           </div>
@@ -169,8 +209,13 @@ export default function Artifacts() {
       ) : (
         <Card>
           <div className="text-center py-8">
-            <Package size={32} className="mx-auto mb-3 dark:text-dark-text-secondary text-light-text-secondary" />
-            <p className="dark:text-dark-text-secondary text-light-text-secondary">No artifacts yet</p>
+            <Package
+              size={32}
+              className="mx-auto mb-3 dark:text-dark-text-secondary text-light-text-secondary"
+            />
+            <p className="dark:text-dark-text-secondary text-light-text-secondary">
+              No artifacts yet
+            </p>
           </div>
         </Card>
       )}
@@ -183,9 +228,16 @@ export default function Artifacts() {
           }}
           className="space-y-4"
         >
-          <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          <Input
+            label="Name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Type</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Type
+            </label>
             <select
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
@@ -198,12 +250,32 @@ export default function Artifacts() {
               <option value="log">Log</option>
             </select>
           </div>
-          <Input label="URI" value={form.uri} onChange={(e) => setForm({ ...form, uri: e.target.value })} required placeholder="s3://bucket/path or /local/path" />
-          <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <Input label="Experiment ID" type="number" value={form.experiment_id} onChange={(e) => setForm({ ...form, experiment_id: e.target.value })} placeholder="Optional" />
+          <Input
+            label="URI"
+            value={form.uri}
+            onChange={(e) => setForm({ ...form, uri: e.target.value })}
+            required
+            placeholder="s3://bucket/path or /local/path"
+          />
+          <Input
+            label="Description"
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+          <Input
+            label="Experiment ID"
+            type="number"
+            value={form.experiment_id}
+            onChange={(e) => setForm({ ...form, experiment_id: e.target.value })}
+            placeholder="Optional"
+          />
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" type="button" onClick={() => setModalOpen(false)}>Cancel</Button>
-            <Button type="submit" loading={createMutation.isPending}>Create</Button>
+            <Button variant="secondary" type="button" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" loading={createMutation.isPending}>
+              Create
+            </Button>
           </div>
         </form>
       </Modal>

@@ -3,14 +3,25 @@ import type { PipelineRun } from '../types';
 
 export const pipelinesApi = {
   health: async (): Promise<{ prefect_available: boolean; version: string }> => {
-    const res = await apiClient.get<{ prefect_available: boolean; version: string }>('/pipelines/health');
+    const res = await apiClient.get<{ prefect_available: boolean; version: string }>(
+      '/pipelines/health'
+    );
     return res.data;
   },
-  run: async (data: { environment_id: string; algorithm: string; total_timesteps: number; experiment_name?: string }): Promise<PipelineRun> => {
+  run: async (data: {
+    environment_id: string;
+    algorithm: string;
+    total_timesteps: number;
+    experiment_name?: string;
+  }): Promise<PipelineRun> => {
     const res = await apiClient.post<PipelineRun>('/pipelines/run', data);
     return res.data;
   },
-  search: async (data: { environment_id: string; algorithm: string; total_timesteps: number }): Promise<PipelineRun> => {
+  search: async (data: {
+    environment_id: string;
+    algorithm: string;
+    total_timesteps: number;
+  }): Promise<PipelineRun> => {
     const res = await apiClient.post<PipelineRun>('/pipelines/search', data);
     return res.data;
   },

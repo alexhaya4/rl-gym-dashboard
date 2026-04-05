@@ -2,7 +2,12 @@ import { apiClient, getItems } from './client';
 import type { OptimizationStudy } from '../types';
 
 export const optimizationApi = {
-  run: async (data: { environment_id: string; algorithm: string; n_trials: number; optimization_metric?: string }): Promise<OptimizationStudy> => {
+  run: async (data: {
+    environment_id: string;
+    algorithm: string;
+    n_trials: number;
+    optimization_metric?: string;
+  }): Promise<OptimizationStudy> => {
     const res = await apiClient.post<OptimizationStudy>('/optimization/run', data);
     return res.data;
   },

@@ -6,7 +6,12 @@ export const multiAgentApi = {
     const res = await apiClient.get<Record<string, unknown>[]>('/multi-agent/environments');
     return Array.isArray(res.data) ? res.data : [];
   },
-  train: async (data: { environment_id: string; algorithms: Record<string, string>; n_agents: number; total_timesteps: number }): Promise<MultiAgentExperiment> => {
+  train: async (data: {
+    environment_id: string;
+    algorithms: Record<string, string>;
+    n_agents: number;
+    total_timesteps: number;
+  }): Promise<MultiAgentExperiment> => {
     const res = await apiClient.post<MultiAgentExperiment>('/multi-agent/train', data);
     return res.data;
   },

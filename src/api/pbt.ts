@@ -2,7 +2,12 @@ import { apiClient, getItems } from './client';
 import type { PBTExperiment, PBTMember } from '../types';
 
 export const pbtApi = {
-  create: async (data: { environment_id: string; algorithm: string; n_population: number; total_timesteps: number }): Promise<PBTExperiment> => {
+  create: async (data: {
+    environment_id: string;
+    algorithm: string;
+    n_population: number;
+    total_timesteps: number;
+  }): Promise<PBTExperiment> => {
     const res = await apiClient.post<PBTExperiment>('/pbt/', data);
     return res.data;
   },

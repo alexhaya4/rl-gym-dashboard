@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Brain, Trash2, Play } from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
 import { Badge } from '../components/UI/Badge';
@@ -114,7 +106,11 @@ export default function MachineLearning() {
               onSubmit={(e) => {
                 e.preventDefault();
                 let hp: Record<string, unknown> = {};
-                try { hp = JSON.parse(hyperparamsText); } catch { /* keep empty */ }
+                try {
+                  hp = JSON.parse(hyperparamsText);
+                } catch {
+                  /* keep empty */
+                }
                 trainMutation.mutate({
                   dataset_id: datasetId as number,
                   algorithm,
@@ -127,7 +123,9 @@ export default function MachineLearning() {
               className="space-y-4"
             >
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Dataset</label>
+                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                  Dataset
+                </label>
                 <select
                   value={datasetId}
                   onChange={(e) => {
@@ -139,13 +137,17 @@ export default function MachineLearning() {
                 >
                   <option value="">Select dataset...</option>
                   {datasets?.map((ds) => (
-                    <option key={ds.id} value={ds.id}>{ds.name}</option>
+                    <option key={ds.id} value={ds.id}>
+                      {ds.name}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Task Type</label>
+                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                  Task Type
+                </label>
                 <select
                   value={taskType}
                   onChange={(e) => {
@@ -156,13 +158,17 @@ export default function MachineLearning() {
                   required
                 >
                   {TASK_TYPES.map((t) => (
-                    <option key={t} value={t}>{t.replace('_', ' ')}</option>
+                    <option key={t} value={t}>
+                      {t.replace('_', ' ')}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Algorithm</label>
+                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                  Algorithm
+                </label>
                 <select
                   value={algorithm}
                   onChange={(e) => setAlgorithm(e.target.value)}
@@ -171,14 +177,18 @@ export default function MachineLearning() {
                 >
                   <option value="">Select algorithm...</option>
                   {filteredAlgorithms.map((a) => (
-                    <option key={a} value={a}>{a}</option>
+                    <option key={a} value={a}>
+                      {a}
+                    </option>
                   ))}
                 </select>
               </div>
 
               {selectedDataset?.columns && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Target Column</label>
+                  <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                    Target Column
+                  </label>
                   <select
                     value={targetColumn}
                     onChange={(e) => setTargetColumn(e.target.value)}
@@ -186,7 +196,9 @@ export default function MachineLearning() {
                   >
                     <option value="">None (unsupervised)</option>
                     {selectedDataset.columns.map((col) => (
-                      <option key={col} value={col}>{col}</option>
+                      <option key={col} value={col}>
+                        {col}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -208,7 +220,9 @@ export default function MachineLearning() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Hyperparameters (JSON)</label>
+                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                  Hyperparameters (JSON)
+                </label>
                 <textarea
                   value={hyperparamsText}
                   onChange={(e) => setHyperparamsText(e.target.value)}
@@ -217,14 +231,20 @@ export default function MachineLearning() {
                 />
               </div>
 
-              <Button type="submit" loading={trainMutation.isPending} className="w-full" disabled={!datasetId || !algorithm}>
+              <Button
+                type="submit"
+                loading={trainMutation.isPending}
+                className="w-full"
+                disabled={!datasetId || !algorithm}
+              >
                 <Brain size={16} />
                 Train Model
               </Button>
 
               {trainMutation.isError && (
                 <p className="text-sm text-red-500">
-                  {(trainMutation.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Training failed'}
+                  {(trainMutation.error as { response?: { data?: { detail?: string } } })?.response
+                    ?.data?.detail || 'Training failed'}
                 </p>
               )}
             </form>
@@ -237,19 +257,27 @@ export default function MachineLearning() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Model ID</p>
+                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                      Model ID
+                    </p>
                     <p className="font-mono font-bold">{trainResult.model_id}</p>
                   </div>
                   <div>
-                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Algorithm</p>
+                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                      Algorithm
+                    </p>
                     <p className="font-mono">{trainResult.algorithm}</p>
                   </div>
                   <div>
-                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">Training Time</p>
+                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                      Training Time
+                    </p>
                     <p className="font-mono">{trainResult.training_time_seconds.toFixed(2)}s</p>
                   </div>
                   <div>
-                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">NaN Rows Dropped</p>
+                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                      NaN Rows Dropped
+                    </p>
                     <p className="font-mono">{trainResult.nan_rows_dropped}</p>
                   </div>
                 </div>
@@ -259,9 +287,16 @@ export default function MachineLearning() {
                   <h3 className="text-sm font-semibold mb-2">Metrics</h3>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     {Object.entries(trainResult.metrics).map(([key, value]) => (
-                      <div key={key} className="flex justify-between px-3 py-1.5 rounded dark:bg-dark-hover bg-light-hover">
-                        <span className="dark:text-dark-text-secondary text-light-text-secondary">{key}</span>
-                        <span className="font-mono font-medium">{typeof value === 'number' ? value.toFixed(4) : String(value)}</span>
+                      <div
+                        key={key}
+                        className="flex justify-between px-3 py-1.5 rounded dark:bg-dark-hover bg-light-hover"
+                      >
+                        <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                          {key}
+                        </span>
+                        <span className="font-mono font-medium">
+                          {typeof value === 'number' ? value.toFixed(4) : String(value)}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -275,7 +310,11 @@ export default function MachineLearning() {
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={trainResult.feature_importance} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-dark-border)" />
-                          <XAxis type="number" stroke="var(--color-dark-text-secondary)" fontSize={10} />
+                          <XAxis
+                            type="number"
+                            stroke="var(--color-dark-text-secondary)"
+                            fontSize={10}
+                          />
                           <YAxis
                             dataKey="feature"
                             type="category"
@@ -324,18 +363,35 @@ export default function MachineLearning() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b dark:border-dark-border border-light-border">
-                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">ID</th>
-                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Name</th>
-                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Algorithm</th>
-                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Task</th>
-                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Metrics</th>
-                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Created</th>
-                      <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Actions</th>
+                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        ID
+                      </th>
+                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        Algorithm
+                      </th>
+                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        Task
+                      </th>
+                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        Metrics
+                      </th>
+                      <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        Created
+                      </th>
+                      <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {models.map((model) => (
-                      <tr key={model.id} className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50">
+                      <tr
+                        key={model.id}
+                        className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50"
+                      >
                         <td className="px-5 py-3 font-mono text-xs">{model.id}</td>
                         <td className="px-5 py-3 font-medium">{model.name}</td>
                         <td className="px-5 py-3 font-mono text-xs">{model.algorithm}</td>
@@ -343,15 +399,24 @@ export default function MachineLearning() {
                           <Badge variant="accent">{model.task_type}</Badge>
                         </td>
                         <td className="px-5 py-3 font-mono text-xs">
-                          {Object.entries(model.metrics).slice(0, 2).map(([k, v]) => (
-                            <span key={k} className="mr-2">{k}: {typeof v === 'number' ? v.toFixed(3) : String(v)}</span>
-                          ))}
+                          {Object.entries(model.metrics)
+                            .slice(0, 2)
+                            .map(([k, v]) => (
+                              <span key={k} className="mr-2">
+                                {k}: {typeof v === 'number' ? v.toFixed(3) : String(v)}
+                              </span>
+                            ))}
                         </td>
                         <td className="px-5 py-3 text-xs dark:text-dark-text-secondary text-light-text-secondary">
                           {new Date(model.created_at).toLocaleDateString()}
                         </td>
                         <td className="px-5 py-3 text-right">
-                          <Button variant="ghost" size="sm" className="text-red-500" onClick={() => deleteMutation.mutate(model.id)}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500"
+                            onClick={() => deleteMutation.mutate(model.id)}
+                          >
                             <Trash2 size={13} />
                           </Button>
                         </td>
@@ -364,7 +429,9 @@ export default function MachineLearning() {
           ) : (
             <Card>
               <div className="text-center py-8">
-                <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No models yet</p>
+                <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+                  No models yet
+                </p>
               </div>
             </Card>
           )}
@@ -380,7 +447,9 @@ export default function MachineLearning() {
               className="space-y-4"
             >
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Model</label>
+                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                  Model
+                </label>
                 <select
                   value={predictModelId}
                   onChange={(e) => setPredictModelId(Number(e.target.value))}
@@ -389,7 +458,9 @@ export default function MachineLearning() {
                 >
                   <option value="">Select model...</option>
                   {models?.map((m) => (
-                    <option key={m.id} value={m.id}>{m.name} ({m.algorithm})</option>
+                    <option key={m.id} value={m.id}>
+                      {m.name} ({m.algorithm})
+                    </option>
                   ))}
                 </select>
               </div>
@@ -408,7 +479,11 @@ export default function MachineLearning() {
                 />
               </div>
 
-              <Button type="submit" loading={predictMutation.isPending} disabled={!predictModelId || !featuresText.trim()}>
+              <Button
+                type="submit"
+                loading={predictMutation.isPending}
+                disabled={!predictModelId || !featuresText.trim()}
+              >
                 <Play size={16} />
                 Predict
               </Button>
@@ -416,26 +491,38 @@ export default function MachineLearning() {
 
             {predictResult && (
               <div className="mt-4 space-y-2">
-                <h3 className="text-sm font-semibold">Results ({predictResult.inference_time_ms.toFixed(1)} ms)</h3>
+                <h3 className="text-sm font-semibold">
+                  Results ({predictResult.inference_time_ms.toFixed(1)} ms)
+                </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs">
                     <thead>
                       <tr>
-                        <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Row</th>
-                        <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Prediction</th>
+                        <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                          Row
+                        </th>
+                        <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                          Prediction
+                        </th>
                         {predictResult.probabilities && (
-                          <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Probabilities</th>
+                          <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                            Probabilities
+                          </th>
                         )}
                       </tr>
                     </thead>
                     <tbody>
                       {predictResult.predictions.map((pred, i) => (
-                        <tr key={i} className="border-t dark:border-dark-border border-light-border">
+                        <tr
+                          key={i}
+                          className="border-t dark:border-dark-border border-light-border"
+                        >
                           <td className="px-3 py-1.5 font-mono">{i + 1}</td>
                           <td className="px-3 py-1.5 font-mono font-bold">{String(pred)}</td>
                           {predictResult.probabilities && (
                             <td className="px-3 py-1.5 font-mono">
-                              [{predictResult.probabilities[i]?.map((p) => p.toFixed(3)).join(', ')}]
+                              [{predictResult.probabilities[i]?.map((p) => p.toFixed(3)).join(', ')}
+                              ]
                             </td>
                           )}
                         </tr>

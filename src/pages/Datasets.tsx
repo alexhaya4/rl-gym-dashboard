@@ -77,7 +77,9 @@ export default function Datasets() {
           className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end"
         >
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">File</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              File
+            </label>
             <input
               type="file"
               accept=".csv,.json"
@@ -90,7 +92,11 @@ export default function Datasets() {
             />
           </div>
           <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-          <Input label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <Input
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
           <Button type="submit" loading={uploadMutation.isPending} disabled={!file || !name}>
             <Upload size={16} />
             Upload
@@ -98,7 +104,8 @@ export default function Datasets() {
         </form>
         {uploadMutation.isError && (
           <p className="text-sm text-red-500 mt-2">
-            {(uploadMutation.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Upload failed'}
+            {(uploadMutation.error as { response?: { data?: { detail?: string } } })?.response?.data
+              ?.detail || 'Upload failed'}
           </p>
         )}
       </Card>
@@ -118,13 +125,27 @@ export default function Datasets() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Name</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Type</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Samples</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Features</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Size</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Created</th>
-                  <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Actions</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Samples
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Features
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Size
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Created
+                  </th>
+                  <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -137,29 +158,49 @@ export default function Datasets() {
                     >
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
-                          {expandedId === ds.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                          {expandedId === ds.id ? (
+                            <ChevronUp size={14} />
+                          ) : (
+                            <ChevronDown size={14} />
+                          )}
                           <div>
                             <p className="font-medium">{ds.name}</p>
-                            {ds.description && <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">{ds.description}</p>}
+                            {ds.description && (
+                              <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                                {ds.description}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </td>
                       <td className="px-5 py-3 font-mono text-xs">{ds.dataset_type}</td>
-                      <td className="px-5 py-3 font-mono text-xs">{ds.num_samples?.toLocaleString() ?? '—'}</td>
+                      <td className="px-5 py-3 font-mono text-xs">
+                        {ds.num_samples?.toLocaleString() ?? '—'}
+                      </td>
                       <td className="px-5 py-3 font-mono text-xs">{ds.num_features ?? '—'}</td>
-                      <td className="px-5 py-3 font-mono text-xs">{ds.file_size_mb.toFixed(2)} MB</td>
+                      <td className="px-5 py-3 font-mono text-xs">
+                        {ds.file_size_mb.toFixed(2)} MB
+                      </td>
                       <td className="px-5 py-3 text-xs dark:text-dark-text-secondary text-light-text-secondary">
                         {new Date(ds.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-5 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                        <Button variant="ghost" size="sm" className="text-red-500" onClick={() => setDeleteConfirm(ds.id)}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-500"
+                          onClick={() => setDeleteConfirm(ds.id)}
+                        >
                           <Trash2 size={13} />
                         </Button>
                       </td>
                     </tr>
                     {expandedId === ds.id && (
                       <tr key={`${ds.id}-detail`}>
-                        <td colSpan={7} className="px-5 py-4 dark:bg-dark-hover/30 bg-light-hover/30">
+                        <td
+                          colSpan={7}
+                          className="px-5 py-4 dark:bg-dark-hover/30 bg-light-hover/30"
+                        >
                           <div className="flex gap-4 mb-4">
                             <button
                               className={`text-sm font-medium pb-1 border-b-2 transition-colors cursor-pointer ${activeTab === 'preview' ? 'border-accent text-accent' : 'border-transparent dark:text-dark-text-secondary text-light-text-secondary'}`}
@@ -181,15 +222,25 @@ export default function Datasets() {
                                 <thead>
                                   <tr>
                                     {preview.columns.map((col) => (
-                                      <th key={col} className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">{col}</th>
+                                      <th
+                                        key={col}
+                                        className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary"
+                                      >
+                                        {col}
+                                      </th>
                                     ))}
                                   </tr>
                                 </thead>
                                 <tbody>
                                   {preview.rows.map((row, i) => (
-                                    <tr key={i} className="border-t dark:border-dark-border border-light-border">
+                                    <tr
+                                      key={i}
+                                      className="border-t dark:border-dark-border border-light-border"
+                                    >
                                       {preview.columns.map((col) => (
-                                        <td key={col} className="px-3 py-1.5 font-mono">{String(row[col] ?? '')}</td>
+                                        <td key={col} className="px-3 py-1.5 font-mono">
+                                          {String(row[col] ?? '')}
+                                        </td>
                                       ))}
                                     </tr>
                                   ))}
@@ -206,25 +257,54 @@ export default function Datasets() {
                               <table className="w-full text-xs">
                                 <thead>
                                   <tr>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Column</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Type</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Mean</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Std</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Min</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Max</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Nulls</th>
-                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">Unique</th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Column
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Type
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Mean
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Std
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Min
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Max
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Nulls
+                                    </th>
+                                    <th className="text-left px-3 py-2 font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                                      Unique
+                                    </th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   {statistics.map((stat) => (
-                                    <tr key={stat.column_name} className="border-t dark:border-dark-border border-light-border">
-                                      <td className="px-3 py-1.5 font-medium">{stat.column_name}</td>
+                                    <tr
+                                      key={stat.column_name}
+                                      className="border-t dark:border-dark-border border-light-border"
+                                    >
+                                      <td className="px-3 py-1.5 font-medium">
+                                        {stat.column_name}
+                                      </td>
                                       <td className="px-3 py-1.5 font-mono">{stat.dtype}</td>
-                                      <td className="px-3 py-1.5 font-mono">{stat.mean?.toFixed(3) ?? '—'}</td>
-                                      <td className="px-3 py-1.5 font-mono">{stat.std?.toFixed(3) ?? '—'}</td>
-                                      <td className="px-3 py-1.5 font-mono">{stat.min?.toFixed(3) ?? '—'}</td>
-                                      <td className="px-3 py-1.5 font-mono">{stat.max?.toFixed(3) ?? '—'}</td>
+                                      <td className="px-3 py-1.5 font-mono">
+                                        {stat.mean?.toFixed(3) ?? '—'}
+                                      </td>
+                                      <td className="px-3 py-1.5 font-mono">
+                                        {stat.std?.toFixed(3) ?? '—'}
+                                      </td>
+                                      <td className="px-3 py-1.5 font-mono">
+                                        {stat.min?.toFixed(3) ?? '—'}
+                                      </td>
+                                      <td className="px-3 py-1.5 font-mono">
+                                        {stat.max?.toFixed(3) ?? '—'}
+                                      </td>
                                       <td className="px-3 py-1.5 font-mono">{stat.null_count}</td>
                                       <td className="px-3 py-1.5 font-mono">{stat.unique_count}</td>
                                     </tr>
@@ -245,18 +325,26 @@ export default function Datasets() {
       ) : (
         <Card>
           <div className="text-center py-8">
-            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No datasets yet</p>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+              No datasets yet
+            </p>
           </div>
         </Card>
       )}
 
       {/* Delete confirm dialog */}
-      <Modal open={deleteConfirm != null} onClose={() => setDeleteConfirm(null)} title="Delete Dataset">
+      <Modal
+        open={deleteConfirm != null}
+        onClose={() => setDeleteConfirm(null)}
+        title="Delete Dataset"
+      >
         <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary mb-4">
           Are you sure you want to delete this dataset? This action cannot be undone.
         </p>
         <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+          <Button variant="secondary" onClick={() => setDeleteConfirm(null)}>
+            Cancel
+          </Button>
           <Button
             variant="danger"
             loading={deleteMutation.isPending}

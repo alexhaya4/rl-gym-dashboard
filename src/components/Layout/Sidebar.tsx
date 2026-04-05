@@ -80,9 +80,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <div className="w-8 h-8 rounded-[var(--radius-btn)] bg-accent flex items-center justify-center flex-shrink-0">
           <span className="text-white font-bold text-sm">RL</span>
         </div>
-        {!collapsed && (
-          <span className="font-semibold text-sm whitespace-nowrap">RL Gym</span>
-        )}
+        {!collapsed && <span className="font-semibold text-sm whitespace-nowrap">RL Gym</span>}
       </div>
 
       <nav className="flex-1 py-3 px-2 space-y-0.5 overflow-y-auto">

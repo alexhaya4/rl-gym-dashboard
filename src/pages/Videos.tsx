@@ -12,11 +12,16 @@ import type { Algorithm, VideoStatus } from '../types';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'completed': return 'success' as const;
-    case 'recording': return 'info' as const;
-    case 'failed': return 'error' as const;
-    case 'pending': return 'warning' as const;
-    default: return 'default' as const;
+    case 'completed':
+      return 'success' as const;
+    case 'recording':
+      return 'info' as const;
+    case 'failed':
+      return 'error' as const;
+    case 'pending':
+      return 'warning' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -51,24 +56,27 @@ export default function Videos() {
     refetchInterval: 10000,
   });
 
-  const startPoll = useCallback((videoId: string) => {
-    if (pollRefs.current.has(videoId)) return;
-    const interval = setInterval(async () => {
-      try {
-        const status = await videoApi.getStatus(videoId);
-        setActiveRecordings((prev) => new Map(prev).set(videoId, status));
-        if (status.status === 'completed' || status.status === 'failed') {
+  const startPoll = useCallback(
+    (videoId: string) => {
+      if (pollRefs.current.has(videoId)) return;
+      const interval = setInterval(async () => {
+        try {
+          const status = await videoApi.getStatus(videoId);
+          setActiveRecordings((prev) => new Map(prev).set(videoId, status));
+          if (status.status === 'completed' || status.status === 'failed') {
+            clearInterval(interval);
+            pollRefs.current.delete(videoId);
+            queryClient.invalidateQueries({ queryKey: ['videos'] });
+          }
+        } catch {
           clearInterval(interval);
           pollRefs.current.delete(videoId);
-          queryClient.invalidateQueries({ queryKey: ['videos'] });
         }
-      } catch {
-        clearInterval(interval);
-        pollRefs.current.delete(videoId);
-      }
-    }, 2000);
-    pollRefs.current.set(videoId, interval);
-  }, [queryClient]);
+      }, 2000);
+      pollRefs.current.set(videoId, interval);
+    },
+    [queryClient]
+  );
 
   useEffect(() => {
     const refs = pollRefs.current;
@@ -87,7 +95,13 @@ export default function Videos() {
         fps,
       }),
     onSuccess: (data) => {
-      setActiveRecordings((prev) => new Map(prev).set(data.video_id, { video_id: data.video_id, status: data.status, progress: 0 }));
+      setActiveRecordings((prev) =>
+        new Map(prev).set(data.video_id, {
+          video_id: data.video_id,
+          status: data.status,
+          progress: 0,
+        })
+      );
       startPoll(data.video_id);
       queryClient.invalidateQueries({ queryKey: ['videos'] });
     },
@@ -103,7 +117,9 @@ export default function Videos() {
       const url = await videoApi.getDownloadUrl(videoId);
       setPlayerUrl(url);
       setPlayerOpen(true);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
 
   const closePlayer = () => {
@@ -132,7 +148,9 @@ export default function Videos() {
           className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end"
         >
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Environment</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Environment
+            </label>
             <select
               value={envId}
               onChange={(e) => setEnvId(e.target.value)}
@@ -151,21 +169,30 @@ export default function Videos() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Algorithm</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Algorithm
+            </label>
             <select
               value={algorithm}
               onChange={(e) => setAlgorithm(e.target.value)}
               className="w-full px-3 py-2 text-sm rounded-[var(--radius-input)] border dark:bg-dark-input dark:border-dark-border dark:text-dark-text bg-light-input border-light-border text-light-text"
             >
               {algorithms?.map((alg) => (
-                <option key={alg.name} value={alg.name}>{alg.name}</option>
-              )) ?? ['PPO', 'A2C', 'DQN'].map((a) => (
-                <option key={a} value={a}>{a}</option>
-              ))}
+                <option key={alg.name} value={alg.name}>
+                  {alg.name}
+                </option>
+              )) ??
+                ['PPO', 'A2C', 'DQN'].map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Episodes (1-5)</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Episodes (1-5)
+            </label>
             <input
               type="number"
               min={1}
@@ -176,7 +203,9 @@ export default function Videos() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Max Steps</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Max Steps
+            </label>
             <input
               type="number"
               min={100}
@@ -188,7 +217,9 @@ export default function Videos() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">FPS (10-60)</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              FPS (10-60)
+            </label>
             <input
               type="number"
               min={10}
@@ -243,15 +274,26 @@ export default function Videos() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Video ID</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Status</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Progress</th>
-                  <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Actions</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Video ID
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Progress
+                  </th>
+                  <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {videos.map((v) => (
-                  <tr key={v.video_id} className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50">
+                  <tr
+                    key={v.video_id}
+                    className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50"
+                  >
                     <td className="px-5 py-3 font-mono text-xs">{v.video_id.slice(0, 16)}...</td>
                     <td className="px-5 py-3">
                       <Badge variant={statusVariant(v.status)}>{v.status}</Badge>
@@ -264,7 +306,9 @@ export default function Videos() {
                             style={{ width: `${Math.min(v.progress, 100)}%` }}
                           />
                         </div>
-                        <span className="font-mono text-xs">{Math.min(v.progress, 100).toFixed(0)}%</span>
+                        <span className="font-mono text-xs">
+                          {Math.min(v.progress, 100).toFixed(0)}%
+                        </span>
                       </div>
                     </td>
                     <td className="px-5 py-3 text-right">
@@ -274,7 +318,12 @@ export default function Videos() {
                             <Play size={13} />
                           </Button>
                         )}
-                        <Button variant="ghost" size="sm" className="text-red-500" onClick={() => deleteMutation.mutate(v.video_id)}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-500"
+                          onClick={() => deleteMutation.mutate(v.video_id)}
+                        >
                           <Trash2 size={13} />
                         </Button>
                       </div>
@@ -288,7 +337,9 @@ export default function Videos() {
       ) : (
         <Card>
           <div className="text-center py-8">
-            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No videos yet</p>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+              No videos yet
+            </p>
           </div>
         </Card>
       )}

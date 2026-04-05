@@ -11,7 +11,11 @@ export const rbacApi = {
     const res = await apiClient.post<{ allowed: boolean }>('/rbac/check', { permission });
     return res.data;
   },
-  assign: async (data: { user_id: number; role: string; organization_id?: number }): Promise<Record<string, unknown>> => {
+  assign: async (data: {
+    user_id: number;
+    role: string;
+    organization_id?: number;
+  }): Promise<Record<string, unknown>> => {
     const res = await apiClient.post<Record<string, unknown>>('/rbac/assign', data);
     return res.data;
   },

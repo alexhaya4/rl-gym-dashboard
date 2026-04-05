@@ -9,10 +9,7 @@ export function Layout() {
   return (
     <div className="min-h-screen">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <div
-        className="transition-all duration-200"
-        style={{ marginLeft: collapsed ? 64 : 240 }}
-      >
+      <div className="transition-all duration-200" style={{ marginLeft: collapsed ? 64 : 240 }}>
         <Header />
         <main className="p-6">
           <Outlet />

@@ -2,7 +2,12 @@ import { apiClient, getItems } from './client';
 import type { CustomEnvironment } from '../types';
 
 export const customEnvironmentsApi = {
-  create: async (data: { name: string; source_code: string; description?: string; entry_point: string }): Promise<CustomEnvironment> => {
+  create: async (data: {
+    name: string;
+    source_code: string;
+    description?: string;
+    entry_point: string;
+  }): Promise<CustomEnvironment> => {
     const res = await apiClient.post<CustomEnvironment>('/custom-environments', data);
     return res.data;
   },

@@ -76,17 +76,23 @@ export default function Organizations() {
               <h2 className="text-sm font-semibold">{selectedOrg.name}</h2>
               <Badge variant="accent">{selectedOrg.plan}</Badge>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setSelectedOrg(null)}>Close</Button>
+            <Button variant="ghost" size="sm" onClick={() => setSelectedOrg(null)}>
+              Close
+            </Button>
           </div>
 
           {/* Usage */}
           {usage && (
             <div className="mb-6">
-              <h3 className="text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider mb-2">Usage</h3>
+              <h3 className="text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider mb-2">
+                Usage
+              </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(usage).map(([key, value]) => (
                   <div key={key} className="p-3 rounded-lg dark:bg-dark-bg bg-light-bg">
-                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">{key.replace(/_/g, ' ')}</p>
+                    <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                      {key.replace(/_/g, ' ')}
+                    </p>
                     <p className="text-lg font-semibold mt-1">{String(value)}</p>
                   </div>
                 ))}
@@ -97,7 +103,10 @@ export default function Organizations() {
           {/* Add Member */}
           <div className="border-t dark:border-dark-border border-light-border pt-4">
             <div className="flex items-center gap-2 mb-3">
-              <Users size={16} className="dark:text-dark-text-secondary text-light-text-secondary" />
+              <Users
+                size={16}
+                className="dark:text-dark-text-secondary text-light-text-secondary"
+              />
               <h3 className="text-sm font-semibold">Members</h3>
             </div>
             <form
@@ -115,7 +124,9 @@ export default function Organizations() {
                 required
               />
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Role</label>
+                <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+                  Role
+                </label>
                 <select
                   value={memberForm.role}
                   onChange={(e) => setMemberForm({ ...memberForm, role: e.target.value })}
@@ -135,8 +146,16 @@ export default function Organizations() {
             {/* Member list from usage if available */}
             {usage && Array.isArray((usage as Record<string, unknown>).members) && (
               <div className="mt-4 space-y-2">
-                {((usage as Record<string, unknown>).members as Array<{ user_id: number; role: string }>).map((m) => (
-                  <div key={m.user_id} className="flex items-center justify-between p-3 rounded-lg dark:bg-dark-bg bg-light-bg">
+                {(
+                  (usage as Record<string, unknown>).members as Array<{
+                    user_id: number;
+                    role: string;
+                  }>
+                ).map((m) => (
+                  <div
+                    key={m.user_id}
+                    className="flex items-center justify-between p-3 rounded-lg dark:bg-dark-bg bg-light-bg"
+                  >
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-mono">User #{m.user_id}</span>
                       <Badge variant="info">{m.role}</Badge>
@@ -181,7 +200,9 @@ export default function Organizations() {
                   <h3 className="font-semibold">{org.name}</h3>
                   <Badge variant="accent">{org.plan}</Badge>
                 </div>
-                <p className="text-xs font-mono dark:text-dark-text-secondary text-light-text-secondary">{org.slug}</p>
+                <p className="text-xs font-mono dark:text-dark-text-secondary text-light-text-secondary">
+                  {org.slug}
+                </p>
                 <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary mt-2">
                   Created {new Date(org.created_at).toLocaleDateString()}
                 </p>
@@ -192,7 +213,9 @@ export default function Organizations() {
       ) : (
         <Card>
           <div className="text-center py-8">
-            <p className="dark:text-dark-text-secondary text-light-text-secondary">No organizations yet</p>
+            <p className="dark:text-dark-text-secondary text-light-text-secondary">
+              No organizations yet
+            </p>
           </div>
         </Card>
       )}
@@ -206,11 +229,25 @@ export default function Organizations() {
           }}
           className="space-y-4"
         >
-          <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <Input label="Slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
+          <Input
+            label="Name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+          <Input
+            label="Slug"
+            value={form.slug}
+            onChange={(e) => setForm({ ...form, slug: e.target.value })}
+            required
+          />
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" type="button" onClick={() => setModalOpen(false)}>Cancel</Button>
-            <Button type="submit" loading={createMutation.isPending}>Create</Button>
+            <Button variant="secondary" type="button" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" loading={createMutation.isPending}>
+              Create
+            </Button>
           </div>
         </form>
       </Modal>

@@ -11,10 +11,14 @@ import type { PBTMember } from '../types';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'completed': return 'success' as const;
-    case 'running': return 'info' as const;
-    case 'failed': return 'error' as const;
-    default: return 'default' as const;
+    case 'completed':
+      return 'success' as const;
+    case 'running':
+      return 'info' as const;
+    case 'failed':
+      return 'error' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -76,7 +80,9 @@ export default function PBT() {
           className="space-y-4"
         >
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Environment</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Environment
+            </label>
             <select
               value={form.environment_id}
               onChange={(e) => setForm({ ...form, environment_id: e.target.value })}
@@ -92,7 +98,9 @@ export default function PBT() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Algorithm</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Algorithm
+            </label>
             <select
               value={form.algorithm}
               onChange={(e) => setForm({ ...form, algorithm: e.target.value })}
@@ -151,7 +159,8 @@ export default function PBT() {
                       {pbt.environment_id} — {pbt.algorithm}
                     </p>
                     <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary">
-                      Pop: {pbt.n_population} &middot; Gen: {pbt.generation} &middot; Best: {pbt.best_reward?.toFixed(2) ?? '—'}
+                      Pop: {pbt.n_population} &middot; Gen: {pbt.generation} &middot; Best:{' '}
+                      {pbt.best_reward?.toFixed(2) ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -166,13 +175,20 @@ export default function PBT() {
             ))}
           </div>
         ) : (
-          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No PBT runs yet</p>
+          <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+            No PBT runs yet
+          </p>
         )}
       </Card>
 
       {/* Members modal */}
       {membersModal && (
-        <Modal open={true} onClose={() => setMembersModal(null)} title={`PBT ${membersModal.id} — Members`} maxWidth="max-w-2xl">
+        <Modal
+          open={true}
+          onClose={() => setMembersModal(null)}
+          title={`PBT ${membersModal.id} — Members`}
+          maxWidth="max-w-2xl"
+        >
           {membersModal.best && (
             <div className="mb-4 p-3 rounded-[var(--radius-card)] border-2 border-amber-500/40 bg-amber-500/5">
               <div className="flex items-center gap-2 mb-2">
@@ -181,20 +197,32 @@ export default function PBT() {
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
-                  <span className="dark:text-dark-text-secondary text-light-text-secondary">Index:</span>{' '}
+                  <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                    Index:
+                  </span>{' '}
                   <span className="font-mono font-bold">{membersModal.best.member_index}</span>
                 </div>
                 <div>
-                  <span className="dark:text-dark-text-secondary text-light-text-secondary">Mean Reward:</span>{' '}
-                  <span className="font-mono font-bold">{membersModal.best.mean_reward?.toFixed(2) ?? '—'}</span>
+                  <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                    Mean Reward:
+                  </span>{' '}
+                  <span className="font-mono font-bold">
+                    {membersModal.best.mean_reward?.toFixed(2) ?? '—'}
+                  </span>
                 </div>
                 <div>
-                  <span className="dark:text-dark-text-secondary text-light-text-secondary">Generation:</span>{' '}
+                  <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                    Generation:
+                  </span>{' '}
                   <span className="font-mono">{membersModal.best.generation}</span>
                 </div>
                 <div>
-                  <span className="dark:text-dark-text-secondary text-light-text-secondary">Params:</span>{' '}
-                  <span className="font-mono">{JSON.stringify(membersModal.best.hyperparameters)}</span>
+                  <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                    Params:
+                  </span>{' '}
+                  <span className="font-mono">
+                    {JSON.stringify(membersModal.best.hyperparameters)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -204,11 +232,21 @@ export default function PBT() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b dark:border-dark-border border-light-border">
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Index</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Mean Reward</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Generation</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Status</th>
-                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Best</th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Index
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Mean Reward
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Generation
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="text-left px-4 py-2 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                      Best
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -220,9 +258,13 @@ export default function PBT() {
                       }`}
                     >
                       <td className="px-4 py-2 font-mono text-xs">{m.member_index}</td>
-                      <td className="px-4 py-2 font-mono text-xs">{m.mean_reward?.toFixed(2) ?? '—'}</td>
+                      <td className="px-4 py-2 font-mono text-xs">
+                        {m.mean_reward?.toFixed(2) ?? '—'}
+                      </td>
                       <td className="px-4 py-2 font-mono text-xs">{m.generation}</td>
-                      <td className="px-4 py-2"><Badge variant={statusVariant(m.status)}>{m.status}</Badge></td>
+                      <td className="px-4 py-2">
+                        <Badge variant={statusVariant(m.status)}>{m.status}</Badge>
+                      </td>
                       <td className="px-4 py-2">
                         {m.is_best && <Trophy size={14} className="text-amber-400" />}
                       </td>
@@ -232,7 +274,9 @@ export default function PBT() {
               </table>
             </div>
           ) : (
-            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">No members data available</p>
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary text-center py-4">
+              No members data available
+            </p>
           )}
         </Modal>
       )}

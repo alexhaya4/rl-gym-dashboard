@@ -27,7 +27,9 @@ export const experimentsApi = {
   },
 
   episodes: async (experimentId: number): Promise<Record<string, unknown>[]> => {
-    const res = await apiClient.get<Record<string, unknown>[]>(`/experiments/${experimentId}/episodes`);
+    const res = await apiClient.get<Record<string, unknown>[]>(
+      `/experiments/${experimentId}/episodes`
+    );
     return Array.isArray(res.data) ? res.data : [];
   },
 };

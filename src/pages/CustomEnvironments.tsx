@@ -26,8 +26,12 @@ export default function CustomEnvironments() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: { name: string; entry_point: string; description?: string; source_code: string }) =>
-      customEnvironmentsApi.create(data),
+    mutationFn: (data: {
+      name: string;
+      entry_point: string;
+      description?: string;
+      source_code: string;
+    }) => customEnvironmentsApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['custom-environments'] });
       setModalOpen(false);
@@ -133,7 +137,12 @@ export default function CustomEnvironments() {
         </Card>
       )}
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Create Custom Environment" maxWidth="max-w-2xl">
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Create Custom Environment"
+        maxWidth="max-w-2xl"
+      >
         <form
           onSubmit={(e) => {
             e.preventDefault();

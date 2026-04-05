@@ -30,9 +30,7 @@ export default function Evaluation() {
     enabled: episodeExpId !== null,
   });
 
-  const episodeColumns = episodes && episodes.length > 0
-    ? Object.keys(episodes[0])
-    : [];
+  const episodeColumns = episodes && episodes.length > 0 ? Object.keys(episodes[0]) : [];
 
   return (
     <div className="space-y-6">

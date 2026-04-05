@@ -9,11 +9,16 @@ import { pipelinesApi } from '../api/pipelines';
 
 const statusVariant = (s: string) => {
   switch (s) {
-    case 'completed': return 'success' as const;
-    case 'running': return 'info' as const;
-    case 'failed': return 'error' as const;
-    case 'pending': return 'warning' as const;
-    default: return 'default' as const;
+    case 'completed':
+      return 'success' as const;
+    case 'running':
+      return 'info' as const;
+    case 'failed':
+      return 'error' as const;
+    case 'pending':
+      return 'warning' as const;
+    default:
+      return 'default' as const;
   }
 };
 
@@ -37,11 +42,20 @@ export default function Pipelines() {
   });
 
   const runMutation = useMutation({
-    mutationFn: (data: { environment_id: string; algorithm: string; total_timesteps: number; experiment_name?: string }) =>
-      pipelinesApi.run(data),
+    mutationFn: (data: {
+      environment_id: string;
+      algorithm: string;
+      total_timesteps: number;
+      experiment_name?: string;
+    }) => pipelinesApi.run(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pipelines'] });
-      setForm({ environment_id: 'CartPole-v1', algorithm: 'PPO', total_timesteps: 10000, experiment_name: '' });
+      setForm({
+        environment_id: 'CartPole-v1',
+        algorithm: 'PPO',
+        total_timesteps: 10000,
+        experiment_name: '',
+      });
     },
   });
 
@@ -71,13 +85,17 @@ export default function Pipelines() {
         {health ? (
           <div className="mt-3 flex items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <span className="dark:text-dark-text-secondary text-light-text-secondary">Prefect Available:</span>
+              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                Prefect Available:
+              </span>
               <Badge variant={health.prefect_available ? 'success' : 'error'}>
                 {health.prefect_available ? 'Yes' : 'No'}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
-              <span className="dark:text-dark-text-secondary text-light-text-secondary">Version:</span>
+              <span className="dark:text-dark-text-secondary text-light-text-secondary">
+                Version:
+              </span>
               <span className="font-mono text-xs">{health.version}</span>
             </div>
           </div>
@@ -91,7 +109,9 @@ export default function Pipelines() {
         <h2 className="text-sm font-semibold mb-4">Run Pipeline</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Environment</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Environment
+            </label>
             <select
               value={form.environment_id}
               onChange={(e) => setForm({ ...form, environment_id: e.target.value })}
@@ -106,7 +126,9 @@ export default function Pipelines() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">Algorithm</label>
+            <label className="text-sm font-medium dark:text-dark-text-secondary text-light-text-secondary">
+              Algorithm
+            </label>
             <select
               value={form.algorithm}
               onChange={(e) => setForm({ ...form, algorithm: e.target.value })}
@@ -114,7 +136,9 @@ export default function Pipelines() {
               required
             >
               {['PPO', 'A2C', 'DQN', 'SAC', 'TD3'].map((alg) => (
-                <option key={alg} value={alg}>{alg}</option>
+                <option key={alg} value={alg}>
+                  {alg}
+                </option>
               ))}
             </select>
           </div>
@@ -154,17 +178,32 @@ export default function Pipelines() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b dark:border-dark-border border-light-border">
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">ID</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Environment</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Algorithm</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Status</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Created</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Completed</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Environment
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Algorithm
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Created
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">
+                    Completed
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {pipelines.map((p) => (
-                  <tr key={p.id} className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50">
+                  <tr
+                    key={p.id}
+                    className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50"
+                  >
                     <td className="px-5 py-3 font-mono text-xs">{p.id}</td>
                     <td className="px-5 py-3">{p.environment_id}</td>
                     <td className="px-5 py-3 font-mono text-xs">{p.algorithm}</td>
@@ -189,7 +228,9 @@ export default function Pipelines() {
       ) : (
         <Card>
           <div className="text-center py-8">
-            <p className="dark:text-dark-text-secondary text-light-text-secondary">No pipelines yet</p>
+            <p className="dark:text-dark-text-secondary text-light-text-secondary">
+              No pipelines yet
+            </p>
           </div>
         </Card>
       )}
