@@ -104,9 +104,7 @@ export default function Datasets() {
           </Button>
         </form>
         {uploadMutation.isError && (
-          <p className="text-sm text-red-500 mt-2">
-            {extractError(uploadMutation.error)}
-          </p>
+          <p className="text-sm text-red-500 mt-2">{extractError(uploadMutation.error)}</p>
         )}
       </Card>
 

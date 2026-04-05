@@ -243,9 +243,7 @@ export default function MachineLearning() {
               </Button>
 
               {trainMutation.isError && (
-                <p className="text-sm text-red-500">
-                  {extractError(trainMutation.error)}
-                </p>
+                <p className="text-sm text-red-500">{extractError(trainMutation.error)}</p>
               )}
             </form>
           </Card>
