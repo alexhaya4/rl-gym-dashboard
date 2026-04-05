@@ -422,6 +422,109 @@ export interface DistributedStatus {
   error?: string;
 }
 
+export interface Artifact {
+  id: number;
+  name: string;
+  type: string;
+  uri: string;
+  description?: string;
+  experiment_id?: number;
+  created_at: string;
+}
+
+export interface MultiAgentExperiment {
+  id: number;
+  environment_id: string;
+  status: string;
+  n_agents: number;
+  algorithms: Record<string, string>;
+  total_timesteps: number;
+  metrics?: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface AgentPolicy {
+  agent_id: string;
+  algorithm: string;
+  mean_reward?: number;
+  episodes_completed: number;
+  status: string;
+}
+
+export interface OptimizationStudy {
+  id: number;
+  environment_id: string;
+  algorithm: string;
+  status: string;
+  n_trials: number;
+  completed_trials: number;
+  best_trial?: Record<string, unknown>;
+  best_value?: number;
+  optimization_metric: string;
+  created_at: string;
+}
+
+export interface PBTExperiment {
+  id: number;
+  environment_id: string;
+  algorithm: string;
+  status: string;
+  n_population: number;
+  total_timesteps: number;
+  generation: number;
+  best_reward?: number;
+  created_at: string;
+}
+
+export interface PBTMember {
+  id: number;
+  pbt_id: number;
+  member_index: number;
+  hyperparameters: Record<string, unknown>;
+  mean_reward?: number;
+  generation: number;
+  is_best: boolean;
+  status: string;
+}
+
+export interface PipelineRun {
+  id: string;
+  environment_id: string;
+  algorithm: string;
+  status: string;
+  total_timesteps: number;
+  experiment_name?: string;
+  created_at: string;
+  completed_at?: string;
+}
+
+export interface BillingPlan {
+  name: string;
+  slug: string;
+  price_monthly: number;
+  features: string[];
+  is_current?: boolean;
+}
+
+export interface BillingSubscription {
+  org_id: number;
+  plan: string;
+  status: string;
+  current_period_end?: string;
+  cancel_at_period_end: boolean;
+}
+
+export interface AuditLog {
+  id: number;
+  user_id: number;
+  event_type: string;
+  action: string;
+  status: string;
+  ip_address?: string;
+  details?: Record<string, unknown>;
+  created_at: string;
+}
+
 export interface ApiError {
   detail: string;
 }

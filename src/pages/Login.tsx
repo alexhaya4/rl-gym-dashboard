@@ -6,6 +6,7 @@ import { Input } from '../components/UI/Input';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import { authApi } from '../api/auth';
+import { oauthApi } from '../api/oauth';
 
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
@@ -105,6 +106,48 @@ export default function Login() {
               {isRegister ? 'Create account' : 'Sign in'}
             </Button>
           </form>
+
+          <div className="mt-4 space-y-3">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t dark:border-dark-border border-light-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-2 dark:bg-dark-card bg-light-card dark:text-dark-text-secondary text-light-text-secondary">or continue with</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={async () => {
+                  try {
+                    const { authorization_url } = await oauthApi.googleLogin();
+                    window.location.href = authorization_url;
+                  } catch {
+                    setError('Google login unavailable');
+                  }
+                }}
+              >
+                Google
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={async () => {
+                  try {
+                    const { authorization_url } = await oauthApi.githubLogin();
+                    window.location.href = authorization_url;
+                  } catch {
+                    setError('GitHub login unavailable');
+                  }
+                }}
+              >
+                GitHub
+              </Button>
+            </div>
+          </div>
 
           <div className="mt-4 text-center">
             <button

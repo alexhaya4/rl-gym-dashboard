@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Package, Plus } from 'lucide-react';
+import { Package, Plus, Download, Trash2, RotateCcw, GitCompare } from 'lucide-react';
 import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
 import { Input } from '../components/UI/Input';
 import { Badge } from '../components/UI/Badge';
 import { Modal } from '../components/UI/Modal';
-import { apiClient, getItems } from '../api/client';
-import type { RegistryEntry } from '../types';
+import { registryApi } from '../api/registry';
+import { modelsApi } from '../api/models';
+import type { RegistryEntry, ModelVersionResponse } from '../types';
 
 const stageVariant = (s: string) => {
   switch (s) {
@@ -25,26 +26,23 @@ export default function Models() {
   const queryClient = useQueryClient();
   const [registerOpen, setRegisterOpen] = useState(false);
   const [registerForm, setRegisterForm] = useState({ model_version_id: '', environment_id: 'CartPole-v1', algorithm: 'PPO' });
+  const [versions, setVersions] = useState<{ experimentId: number; data: ModelVersionResponse[] } | null>(null);
+  const [comparison, setComparison] = useState<{ id: number; data: Record<string, unknown> } | null>(null);
+  const [rollbackTarget, setRollbackTarget] = useState<RegistryEntry | null>(null);
+  const [rollbackComment, setRollbackComment] = useState('');
 
   const { data: models, isLoading } = useQuery({
     queryKey: ['models'],
-    queryFn: async () => {
-      const res = await apiClient.get('/registry/');
-      return getItems<RegistryEntry>(res.data);
-    },
+    queryFn: () => registryApi.list(),
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (data: { model_version_id: string; environment_id: string; algorithm: string }) => {
-      const res = await apiClient.post('/registry/register', null, {
-        params: {
-          model_version_id: Number(data.model_version_id),
-          environment_id: data.environment_id,
-          algorithm: data.algorithm,
-        },
-      });
-      return res.data;
-    },
+    mutationFn: (data: { model_version_id: string; environment_id: string; algorithm: string }) =>
+      registryApi.register({
+        model_version_id: Number(data.model_version_id),
+        environment_id: data.environment_id,
+        algorithm: data.algorithm,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['models'] });
       setRegisterOpen(false);
@@ -53,15 +51,45 @@ export default function Models() {
   });
 
   const promoteMutation = useMutation({
-    mutationFn: async ({ id, target_stage, model_version_id }: { id: number; target_stage: string; model_version_id: number }) => {
-      const res = await apiClient.post(`/registry/${id}/promote`, {
-        model_version_id,
-        target_stage,
-      });
-      return res.data;
-    },
+    mutationFn: ({ id, target_stage, model_version_id }: { id: number; target_stage: string; model_version_id: number }) =>
+      registryApi.promote(id, { model_version_id, target_stage }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['models'] }),
   });
+
+  const rollbackMutation = useMutation({
+    mutationFn: ({ envId, algorithm, comment }: { envId: string; algorithm: string; comment?: string }) =>
+      registryApi.rollback(envId, algorithm, comment),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['models'] });
+      setRollbackTarget(null);
+      setRollbackComment('');
+    },
+  });
+
+  const deleteVersionMutation = useMutation({
+    mutationFn: (versionId: number) => modelsApi.delete(versionId),
+    onSuccess: () => {
+      if (versions) {
+        modelsApi.listByExperiment(versions.experimentId).then((data) =>
+          setVersions({ experimentId: versions.experimentId, data }),
+        );
+      }
+    },
+  });
+
+  const fetchVersions = useCallback(async (experimentId: number) => {
+    try {
+      const data = await modelsApi.listByExperiment(experimentId);
+      setVersions({ experimentId, data });
+    } catch { /* ignore */ }
+  }, []);
+
+  const fetchComparison = useCallback(async (registryId: number) => {
+    try {
+      const data = await registryApi.compare(registryId);
+      setComparison({ id: registryId, data });
+    } catch { /* ignore */ }
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -77,6 +105,79 @@ export default function Models() {
           Register Model
         </Button>
       </div>
+
+      {/* Comparison card */}
+      {comparison && (
+        <Card>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold">Comparison — <span className="font-mono text-accent">{comparison.id}</span></h3>
+            <Button variant="ghost" size="sm" onClick={() => setComparison(null)}>Close</Button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+            {Object.entries(comparison.data).map(([key, value]) => (
+              <div key={key}>
+                <span className="dark:text-dark-text-secondary text-light-text-secondary">{key}:</span>{' '}
+                <span className="font-mono font-medium">{typeof value === 'object' ? JSON.stringify(value) : String(value)}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Model versions card */}
+      {versions && (
+        <Card padding="none">
+          <div className="flex items-center justify-between p-5 border-b dark:border-dark-border border-light-border">
+            <h3 className="text-sm font-semibold">Model Versions — Experiment <span className="font-mono text-accent">{versions.experimentId}</span></h3>
+            <Button variant="ghost" size="sm" onClick={() => setVersions(null)}>Close</Button>
+          </div>
+          {versions.data.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b dark:border-dark-border border-light-border">
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">ID</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Version</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Algorithm</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Mean Reward</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Size</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Created</th>
+                    <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {versions.data.map((v) => (
+                    <tr key={v.id} className="border-b last:border-b-0 dark:border-dark-border border-light-border">
+                      <td className="px-5 py-3 font-mono text-xs">{v.id}</td>
+                      <td className="px-5 py-3 font-mono text-xs">v{v.version}</td>
+                      <td className="px-5 py-3 font-mono text-xs">{v.algorithm}</td>
+                      <td className="px-5 py-3 font-mono text-xs">{v.mean_reward?.toFixed(2) ?? '—'}</td>
+                      <td className="px-5 py-3 font-mono text-xs">{v.file_size_bytes ? `${(v.file_size_bytes / 1024 / 1024).toFixed(2)} MB` : '—'}</td>
+                      <td className="px-5 py-3 text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                        {new Date(v.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-5 py-3 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => modelsApi.download(v.id)}>
+                            <Download size={13} />
+                          </Button>
+                          <Button variant="ghost" size="sm" className="text-red-500" onClick={() => deleteVersionMutation.mutate(v.id)}>
+                            <Trash2 size={13} />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No versions found</p>
+            </div>
+          )}
+        </Card>
+      )}
 
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -141,6 +242,15 @@ export default function Models() {
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
+                <Button variant="ghost" size="sm" onClick={() => setRollbackTarget(model)} title="Rollback">
+                  <RotateCcw size={13} />
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => fetchComparison(model.id)} title="Compare">
+                  <GitCompare size={13} />
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => fetchVersions(model.model_version_id)} title="Versions">
+                  <Package size={13} />
+                </Button>
               </div>
               <p className="text-xs dark:text-dark-text-secondary text-light-text-secondary mt-3">
                 Created {new Date(model.created_at).toLocaleDateString()}
@@ -156,6 +266,7 @@ export default function Models() {
         </Card>
       )}
 
+      {/* Register Modal */}
       <Modal open={registerOpen} onClose={() => setRegisterOpen(false)} title="Register Model">
         <form
           onSubmit={(e) => {
@@ -199,6 +310,32 @@ export default function Models() {
             <Button type="submit" loading={registerMutation.isPending}>Register</Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Rollback Modal */}
+      <Modal open={rollbackTarget != null} onClose={() => { setRollbackTarget(null); setRollbackComment(''); }} title="Rollback Model">
+        {rollbackTarget && (
+          <div className="space-y-4">
+            <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">
+              Rollback <span className="font-mono font-medium">{rollbackTarget.environment_id}/{rollbackTarget.algorithm}</span> to the previous production version?
+            </p>
+            <Input label="Comment (optional)" value={rollbackComment} onChange={(e) => setRollbackComment(e.target.value)} />
+            <div className="flex justify-end gap-3">
+              <Button variant="secondary" onClick={() => { setRollbackTarget(null); setRollbackComment(''); }}>Cancel</Button>
+              <Button
+                variant="danger"
+                loading={rollbackMutation.isPending}
+                onClick={() => rollbackMutation.mutate({
+                  envId: rollbackTarget.environment_id,
+                  algorithm: rollbackTarget.algorithm,
+                  comment: rollbackComment || undefined,
+                })}
+              >
+                Rollback
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

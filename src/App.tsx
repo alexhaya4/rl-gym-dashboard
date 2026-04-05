@@ -28,6 +28,21 @@ const Videos = lazy(() => import('./pages/Videos'));
 const Datasets = lazy(() => import('./pages/Datasets'));
 const MachineLearning = lazy(() => import('./pages/MachineLearning'));
 const DistributedTraining = lazy(() => import('./pages/DistributedTraining'));
+const Comparison = lazy(() => import('./pages/Comparison'));
+const Artifacts = lazy(() => import('./pages/Artifacts'));
+const MultiAgent = lazy(() => import('./pages/MultiAgent'));
+const Optimization = lazy(() => import('./pages/Optimization'));
+const PBT = lazy(() => import('./pages/PBT'));
+const Pipelines = lazy(() => import('./pages/Pipelines'));
+const Organizations = lazy(() => import('./pages/Organizations'));
+const OAuthCallback = lazy(() => import('./pages/OAuthCallback'));
+const RBAC = lazy(() => import('./pages/RBAC'));
+const Billing = lazy(() => import('./pages/Billing'));
+const VecEnvironments = lazy(() => import('./pages/VecEnvironments'));
+const Evaluation = lazy(() => import('./pages/Evaluation'));
+const AuditLogs = lazy(() => import('./pages/AuditLogs'));
+const CustomEnvironments = lazy(() => import('./pages/CustomEnvironments'));
+const SystemStatus = lazy(() => import('./pages/SystemStatus'));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -50,6 +65,7 @@ export default function App() {
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route
               element={
                 <ProtectedRoute>
@@ -70,6 +86,20 @@ export default function App() {
               <Route path="datasets" element={<Datasets />} />
               <Route path="ml" element={<MachineLearning />} />
               <Route path="distributed" element={<DistributedTraining />} />
+              <Route path="comparison" element={<Comparison />} />
+              <Route path="artifacts" element={<Artifacts />} />
+              <Route path="multi-agent" element={<MultiAgent />} />
+              <Route path="optimization" element={<Optimization />} />
+              <Route path="pbt" element={<PBT />} />
+              <Route path="pipelines" element={<Pipelines />} />
+              <Route path="organizations" element={<Organizations />} />
+              <Route path="rbac" element={<RBAC />} />
+              <Route path="billing" element={<Billing />} />
+              <Route path="vec-environments" element={<VecEnvironments />} />
+              <Route path="evaluation" element={<Evaluation />} />
+              <Route path="audit-logs" element={<AuditLogs />} />
+              <Route path="custom-environments" element={<CustomEnvironments />} />
+              <Route path="system-status" element={<SystemStatus />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

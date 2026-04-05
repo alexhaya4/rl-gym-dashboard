@@ -25,4 +25,9 @@ export const experimentsApi = {
   delete: async (id: number): Promise<void> => {
     await apiClient.delete(`/experiments/${id}`);
   },
+
+  episodes: async (experimentId: number): Promise<Record<string, unknown>[]> => {
+    const res = await apiClient.get<Record<string, unknown>[]>(`/experiments/${experimentId}/episodes`);
+    return Array.isArray(res.data) ? res.data : [];
+  },
 };

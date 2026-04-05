@@ -1,6 +1,6 @@
 import { apiClient } from './client';
 import { useAuthStore } from '../store/authStore';
-import type { VideoResponse, VideoStatus } from '../types';
+import type { VideoStatus } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api/v1';
 
@@ -11,8 +11,8 @@ export const videoApi = {
     num_episodes: number;
     max_steps: number;
     fps: number;
-  }): Promise<VideoResponse> => {
-    const res = await apiClient.post<VideoResponse>('/video/record', data);
+  }): Promise<VideoStatus> => {
+    const res = await apiClient.post<VideoStatus>('/video/record', data);
     return res.data;
   },
 
@@ -21,8 +21,8 @@ export const videoApi = {
     return res.data;
   },
 
-  list: async (): Promise<VideoResponse[]> => {
-    const res = await apiClient.get<VideoResponse[]>('/video/');
+  list: async (): Promise<VideoStatus[]> => {
+    const res = await apiClient.get<VideoStatus[]>('/video/');
     return Array.isArray(res.data) ? res.data : [];
   },
 

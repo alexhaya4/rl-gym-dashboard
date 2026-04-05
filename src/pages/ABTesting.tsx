@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { GitBranch, CheckCircle2, XCircle, Plus, Play, Square, BarChart3 } from 'lucide-react';
+import { GitBranch, CheckCircle2, XCircle, Plus, Play, Square, BarChart3, List } from 'lucide-react';
 import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
 import { Input } from '../components/UI/Input';
 import { Badge } from '../components/UI/Badge';
 import { Modal } from '../components/UI/Modal';
-import { apiClient, getItems } from '../api/client';
-import type { ABTest, ABTestCreate, ABTestStatistics } from '../types';
+import { abTestingApi } from '../api/abTesting';
+import type { ABTestCreate, ABTestStatistics, ABTestResultResponse } from '../types';
 
 const statusVariant = (s: string) => {
   switch (s) {
@@ -35,17 +35,11 @@ export default function ABTesting() {
 
   const { data: tests, isLoading } = useQuery({
     queryKey: ['ab-tests'],
-    queryFn: async () => {
-      const res = await apiClient.get('/ab-testing/');
-      return getItems<ABTest>(res.data);
-    },
+    queryFn: () => abTestingApi.list(),
   });
 
   const createMutation = useMutation({
-    mutationFn: async (data: ABTestCreate) => {
-      const res = await apiClient.post('/ab-testing/', data);
-      return res.data;
-    },
+    mutationFn: (data: ABTestCreate) => abTestingApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ab-tests'] });
       setModalOpen(false);
@@ -54,27 +48,29 @@ export default function ABTesting() {
   });
 
   const runMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const res = await apiClient.post(`/ab-testing/${id}/run`);
-      return res.data;
-    },
+    mutationFn: (id: number) => abTestingApi.run(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['ab-tests'] }),
   });
 
   const stopMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const res = await apiClient.post(`/ab-testing/${id}/stop`);
-      return res.data;
-    },
+    mutationFn: (id: number) => abTestingApi.stop(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['ab-tests'] }),
   });
 
   const [statistics, setStatistics] = useState<{ id: number; data: ABTestStatistics } | null>(null);
+  const [results, setResults] = useState<{ id: number; data: ABTestResultResponse[] } | null>(null);
 
   const fetchStatistics = useCallback(async (id: number) => {
     try {
-      const res = await apiClient.get<ABTestStatistics>(`/ab-testing/${id}/statistics`);
-      setStatistics({ id, data: res.data });
+      const data = await abTestingApi.statistics(id);
+      setStatistics({ id, data });
+    } catch { /* may not be available */ }
+  }, []);
+
+  const fetchResults = useCallback(async (id: number) => {
+    try {
+      const data = await abTestingApi.results(id);
+      setResults({ id, data });
     } catch { /* may not be available */ }
   }, []);
 
@@ -122,6 +118,50 @@ export default function ABTesting() {
         </Card>
       )}
 
+      {/* Results table */}
+      {results && (
+        <Card padding="none">
+          <div className="flex items-center justify-between p-5 border-b dark:border-dark-border border-light-border">
+            <h3 className="text-sm font-semibold">Results — <span className="font-mono text-accent">{results.id}</span></h3>
+            <Button variant="ghost" size="sm" onClick={() => setResults(null)}>Close</Button>
+          </div>
+          {results.data.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b dark:border-dark-border border-light-border">
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Episode</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Variant</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Reward</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Length</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.data.map((r) => (
+                    <tr key={r.id} className="border-b last:border-b-0 dark:border-dark-border border-light-border">
+                      <td className="px-5 py-3 font-mono text-xs">{r.episode_number}</td>
+                      <td className="px-5 py-3">
+                        <Badge variant={r.model_variant === 'A' ? 'info' : 'accent'}>{r.model_variant}</Badge>
+                      </td>
+                      <td className="px-5 py-3 font-mono text-xs">{r.total_reward.toFixed(2)}</td>
+                      <td className="px-5 py-3 font-mono text-xs">{r.episode_length ?? '—'}</td>
+                      <td className="px-5 py-3 text-xs dark:text-dark-text-secondary text-light-text-secondary">
+                        {new Date(r.created_at).toLocaleTimeString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No results yet</p>
+            </div>
+          )}
+        </Card>
+      )}
+
       {isLoading ? (
         <Card>
           <div className="animate-pulse space-y-3">
@@ -158,10 +198,16 @@ export default function ABTesting() {
                     </Button>
                   )}
                   {test.status === 'completed' && (
-                    <Button variant="ghost" size="sm" onClick={() => fetchStatistics(test.id)}>
-                      <BarChart3 size={13} />
-                      Statistics
-                    </Button>
+                    <>
+                      <Button variant="ghost" size="sm" onClick={() => fetchStatistics(test.id)}>
+                        <BarChart3 size={13} />
+                        Statistics
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => fetchResults(test.id)}>
+                        <List size={13} />
+                        Results
+                      </Button>
+                    </>
                   )}
                   <Badge variant={statusVariant(test.status)}>{test.status}</Badge>
                 </div>

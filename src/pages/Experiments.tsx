@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, Search } from 'lucide-react';
+import { Plus, Trash2, Search, List } from 'lucide-react';
 import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
 import { Input } from '../components/UI/Input';
@@ -50,6 +50,15 @@ export default function Experiments() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['experiments'] }),
   });
 
+  const [episodes, setEpisodes] = useState<{ id: number; data: Record<string, unknown>[] } | null>(null);
+
+  const fetchEpisodes = useCallback(async (experimentId: number) => {
+    try {
+      const data = await experimentsApi.episodes(experimentId);
+      setEpisodes({ id: experimentId, data });
+    } catch { /* may not be available */ }
+  }, []);
+
   const filtered = experiments?.filter((exp) => {
     const matchesSearch = exp.name.toLowerCase().includes(filter.toLowerCase()) ||
       exp.algorithm.toLowerCase().includes(filter.toLowerCase());
@@ -96,6 +105,44 @@ export default function Experiments() {
         </select>
       </div>
 
+      {/* Episodes panel */}
+      {episodes && (
+        <Card padding="none">
+          <div className="flex items-center justify-between p-5 border-b dark:border-dark-border border-light-border">
+            <h3 className="text-sm font-semibold">Episodes — Experiment <span className="font-mono text-accent">{episodes.id}</span></h3>
+            <Button variant="ghost" size="sm" onClick={() => setEpisodes(null)}>Close</Button>
+          </div>
+          {episodes.data.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b dark:border-dark-border border-light-border">
+                    {Object.keys(episodes.data[0]).map((key) => (
+                      <th key={key} className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">{key}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {episodes.data.map((ep, i) => (
+                    <tr key={i} className="border-b last:border-b-0 dark:border-dark-border border-light-border">
+                      {Object.values(ep).map((val, j) => (
+                        <td key={j} className="px-5 py-3 font-mono text-xs">
+                          {typeof val === 'number' ? val.toFixed(2) : String(val ?? '—')}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary">No episodes recorded</p>
+            </div>
+          )}
+        </Card>
+      )}
+
       {isLoading ? (
         <Card padding="none">
           <div className="animate-pulse p-5 space-y-3">
@@ -136,9 +183,14 @@ export default function Experiments() {
                       {new Date(exp.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-5 py-3 text-right">
-                      <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(exp.id)} className="text-red-500">
-                        <Trash2 size={13} />
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button variant="ghost" size="sm" onClick={() => fetchEpisodes(exp.id)}>
+                          <List size={13} />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(exp.id)} className="text-red-500">
+                          <Trash2 size={13} />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}

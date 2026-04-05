@@ -216,10 +216,10 @@ export default function Videos() {
                 <div className="w-32 h-2 rounded-full dark:bg-dark-border bg-light-border overflow-hidden">
                   <div
                     className="h-full bg-accent rounded-full transition-all"
-                    style={{ width: `${Math.min(rec.progress * 100, 100)}%` }}
+                    style={{ width: `${Math.min(rec.progress, 100)}%` }}
                   />
                 </div>
-                <span className="text-xs font-mono">{(rec.progress * 100).toFixed(0)}%</span>
+                <span className="text-xs font-mono">{Math.min(rec.progress, 100).toFixed(0)}%</span>
                 {rec.error && <span className="text-xs text-red-500">{rec.error}</span>}
               </div>
             ))}
@@ -244,27 +244,31 @@ export default function Videos() {
                 <tr className="border-b dark:border-dark-border border-light-border">
                   <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Video ID</th>
                   <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Status</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Episodes</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Reward</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Duration</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Size</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Progress</th>
                   <th className="text-right px-5 py-3 text-xs font-medium dark:text-dark-text-secondary text-light-text-secondary uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {videos.map((v) => (
                   <tr key={v.video_id} className="border-b last:border-b-0 dark:border-dark-border border-light-border dark:hover:bg-dark-hover/50 hover:bg-light-hover/50">
-                    <td className="px-5 py-3 font-mono text-xs">{v.video_id.slice(0, 12)}...</td>
+                    <td className="px-5 py-3 font-mono text-xs">{v.video_id.slice(0, 16)}...</td>
                     <td className="px-5 py-3">
                       <Badge variant={statusVariant(v.status)}>{v.status}</Badge>
                     </td>
-                    <td className="px-5 py-3 font-mono text-xs">{v.num_episodes}</td>
-                    <td className="px-5 py-3 font-mono text-xs">{v.total_reward.toFixed(1)}</td>
-                    <td className="px-5 py-3 font-mono text-xs">{v.duration_seconds.toFixed(1)}s</td>
-                    <td className="px-5 py-3 font-mono text-xs">{v.file_size_mb.toFixed(1)} MB</td>
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 h-2 rounded-full dark:bg-dark-border bg-light-border overflow-hidden">
+                          <div
+                            className="h-full bg-accent rounded-full transition-all"
+                            style={{ width: `${Math.min(v.progress, 100)}%` }}
+                          />
+                        </div>
+                        <span className="font-mono text-xs">{Math.min(v.progress, 100).toFixed(0)}%</span>
+                      </div>
+                    </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        {v.status === 'completed' && (
+                        {(v.status === 'complete' || v.status === 'completed') && (
                           <Button variant="ghost" size="sm" onClick={() => handlePlay(v.video_id)}>
                             <Play size={13} />
                           </Button>

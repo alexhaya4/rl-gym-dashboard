@@ -1,6 +1,7 @@
 import { Sun, Moon, LogOut, User } from 'lucide-react';
 import { useThemeStore } from '../../store/themeStore';
 import { useAuthStore } from '../../store/authStore';
+import { authApi } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 
@@ -21,7 +22,8 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await authApi.logout(); } catch { /* proceed with local logout */ }
     logout();
     navigate('/login');
   };

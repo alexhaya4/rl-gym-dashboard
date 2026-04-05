@@ -3,9 +3,7 @@ import type { DatasetResponse, DatasetPreview, DatasetStatistics } from '../type
 
 export const datasetsApi = {
   upload: async (formData: FormData): Promise<DatasetResponse> => {
-    const res = await apiClient.post<DatasetResponse>('/datasets/upload', formData, {
-      headers: { 'Content-Type': undefined as unknown as string },
-    });
+    const res = await apiClient.post<DatasetResponse>('/datasets/upload', formData);
     return res.data;
   },
 
@@ -17,19 +15,19 @@ export const datasetsApi = {
   },
 
   get: async (id: number): Promise<DatasetResponse> => {
-    const res = await apiClient.get<DatasetResponse>(`/datasets/${id}`);
+    const res = await apiClient.get<DatasetResponse>(`/datasets/file/${id}`);
     return res.data;
   },
 
   preview: async (id: number, limit?: number): Promise<DatasetPreview> => {
-    const res = await apiClient.get<DatasetPreview>(`/datasets/${id}/preview`, {
+    const res = await apiClient.get<DatasetPreview>(`/datasets/file/${id}/preview`, {
       params: limit ? { limit } : undefined,
     });
     return res.data;
   },
 
   statistics: async (id: number): Promise<DatasetStatistics[]> => {
-    const res = await apiClient.get<DatasetStatistics[]>(`/datasets/${id}/statistics`);
+    const res = await apiClient.get<DatasetStatistics[]>(`/datasets/file/${id}/statistics`);
     return Array.isArray(res.data) ? res.data : [];
   },
 
