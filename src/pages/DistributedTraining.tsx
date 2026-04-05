@@ -9,6 +9,7 @@ import { distributedApi } from '../api/distributed';
 import { environmentsApi } from '../api/environments';
 import { apiClient, getItems } from '../api/client';
 import type { Algorithm, DistributedTrainRequest } from '../types';
+import { extractError } from '../utils/extractError';
 
 const statusVariant = (s: string) => {
   switch (s) {
@@ -247,8 +248,7 @@ export default function DistributedTraining() {
 
           {trainMutation.isError && (
             <p className="text-sm text-red-500">
-              {(trainMutation.error as { response?: { data?: { detail?: string } } })?.response
-                ?.data?.detail || 'Training failed'}
+              {extractError(trainMutation.error)}
             </p>
           )}
         </form>

@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/Layout/Layout';
 import { useAuthStore } from './store/authStore';
 import { lazy, Suspense, type ReactNode } from 'react';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { ToastContainer } from './components/Toast';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,51 +62,54 @@ function Loading() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/oauth/callback" element={<OAuthCallback />} />
-            <Route
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="environments" element={<Environments />} />
-              <Route path="training" element={<Training />} />
-              <Route path="experiments" element={<Experiments />} />
-              <Route path="benchmarks" element={<Benchmarks />} />
-              <Route path="models" element={<Models />} />
-              <Route path="ab-testing" element={<ABTesting />} />
-              <Route path="algorithms" element={<Algorithms />} />
-              <Route path="inference" element={<Inference />} />
-              <Route path="videos" element={<Videos />} />
-              <Route path="datasets" element={<Datasets />} />
-              <Route path="ml" element={<MachineLearning />} />
-              <Route path="distributed" element={<DistributedTraining />} />
-              <Route path="comparison" element={<Comparison />} />
-              <Route path="artifacts" element={<Artifacts />} />
-              <Route path="multi-agent" element={<MultiAgent />} />
-              <Route path="optimization" element={<Optimization />} />
-              <Route path="pbt" element={<PBT />} />
-              <Route path="pipelines" element={<Pipelines />} />
-              <Route path="organizations" element={<Organizations />} />
-              <Route path="rbac" element={<RBAC />} />
-              <Route path="billing" element={<Billing />} />
-              <Route path="vec-environments" element={<VecEnvironments />} />
-              <Route path="evaluation" element={<Evaluation />} />
-              <Route path="audit-logs" element={<AuditLogs />} />
-              <Route path="custom-environments" element={<CustomEnvironments />} />
-              <Route path="system-status" element={<SystemStatus />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/oauth/callback" element={<OAuthCallback />} />
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Dashboard />} />
+                <Route path="environments" element={<Environments />} />
+                <Route path="training" element={<Training />} />
+                <Route path="experiments" element={<Experiments />} />
+                <Route path="benchmarks" element={<Benchmarks />} />
+                <Route path="models" element={<Models />} />
+                <Route path="ab-testing" element={<ABTesting />} />
+                <Route path="algorithms" element={<Algorithms />} />
+                <Route path="inference" element={<Inference />} />
+                <Route path="videos" element={<Videos />} />
+                <Route path="datasets" element={<Datasets />} />
+                <Route path="ml" element={<MachineLearning />} />
+                <Route path="distributed" element={<DistributedTraining />} />
+                <Route path="comparison" element={<Comparison />} />
+                <Route path="artifacts" element={<Artifacts />} />
+                <Route path="multi-agent" element={<MultiAgent />} />
+                <Route path="optimization" element={<Optimization />} />
+                <Route path="pbt" element={<PBT />} />
+                <Route path="pipelines" element={<Pipelines />} />
+                <Route path="organizations" element={<Organizations />} />
+                <Route path="rbac" element={<RBAC />} />
+                <Route path="billing" element={<Billing />} />
+                <Route path="vec-environments" element={<VecEnvironments />} />
+                <Route path="evaluation" element={<Evaluation />} />
+                <Route path="audit-logs" element={<AuditLogs />} />
+                <Route path="custom-environments" element={<CustomEnvironments />} />
+                <Route path="system-status" element={<SystemStatus />} />
+              </Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+          <ToastContainer />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

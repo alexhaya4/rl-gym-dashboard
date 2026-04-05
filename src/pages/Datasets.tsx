@@ -6,6 +6,7 @@ import { Button } from '../components/UI/Button';
 import { Input } from '../components/UI/Input';
 import { Modal } from '../components/UI/Modal';
 import { datasetsApi } from '../api/datasets';
+import { extractError } from '../utils/extractError';
 
 export default function Datasets() {
   const queryClient = useQueryClient();
@@ -104,8 +105,7 @@ export default function Datasets() {
         </form>
         {uploadMutation.isError && (
           <p className="text-sm text-red-500 mt-2">
-            {(uploadMutation.error as { response?: { data?: { detail?: string } } })?.response?.data
-              ?.detail || 'Upload failed'}
+            {extractError(uploadMutation.error)}
           </p>
         )}
       </Card>

@@ -8,6 +8,7 @@ import { Badge } from '../components/UI/Badge';
 import { mlApi } from '../api/ml';
 import { datasetsApi } from '../api/datasets';
 import type { MLTrainRequest, MLTrainResponse, MLPredictResponse } from '../types';
+import { extractError } from '../utils/extractError';
 
 const TASK_TYPES = ['classification', 'regression', 'clustering', 'dimensionality_reduction'];
 
@@ -243,8 +244,7 @@ export default function MachineLearning() {
 
               {trainMutation.isError && (
                 <p className="text-sm text-red-500">
-                  {(trainMutation.error as { response?: { data?: { detail?: string } } })?.response
-                    ?.data?.detail || 'Training failed'}
+                  {extractError(trainMutation.error)}
                 </p>
               )}
             </form>

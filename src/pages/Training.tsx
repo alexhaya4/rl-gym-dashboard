@@ -18,6 +18,7 @@ import { Input } from '../components/UI/Input';
 import { trainingApi } from '../api/training';
 import { getWsUrl } from '../api/client';
 import type { TrainingStart, TrainingJob, TrainingResult } from '../types';
+import { extractError } from '../utils/extractError';
 
 interface WsMetric {
   type: string;
@@ -110,11 +111,7 @@ export default function Training() {
       connectWs(response.experiment_id);
     },
     onError: (error: unknown) => {
-      const msg =
-        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
-        (error as Error)?.message ||
-        'Failed to start training';
-      setSubmitError(msg);
+      setSubmitError(extractError(error));
     },
   });
 

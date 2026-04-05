@@ -7,6 +7,7 @@ import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import { authApi } from '../api/auth';
 import { oauthApi } from '../api/oauth';
+import { extractError } from '../utils/extractError';
 
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
@@ -35,11 +36,7 @@ export default function Login() {
       setAuth(tokens.access_token, user);
       navigate('/');
     } catch (err: unknown) {
-      const msg =
-        err && typeof err === 'object' && 'response' in err
-          ? (err as { response?: { data?: { detail?: string } } }).response?.data?.detail
-          : undefined;
-      setError(msg ?? (isRegister ? 'Registration failed' : 'Invalid credentials'));
+      setError(extractError(err));
     } finally {
       setLoading(false);
     }

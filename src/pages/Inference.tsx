@@ -7,6 +7,7 @@ import { inferenceApi } from '../api/inference';
 import { environmentsApi } from '../api/environments';
 import { apiClient, getItems } from '../api/client';
 import type { Algorithm, InferenceResponse } from '../types';
+import { extractError } from '../utils/extractError';
 
 export default function Inference() {
   const queryClient = useQueryClient();
@@ -43,14 +44,12 @@ export default function Inference() {
       setError(null);
     },
     onError: (err: unknown) => {
-      const msg =
-        (err as { response?: { status?: number; data?: { detail?: string } } })?.response
-          ?.status === 404
+      const axErr = err as { response?: { status?: number } };
+      setError(
+        axErr?.response?.status === 404
           ? 'No production model found for this environment/algorithm'
-          : (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
-            (err as Error)?.message ||
-            'Prediction failed';
-      setError(msg);
+          : extractError(err)
+      );
       setResult(null);
     },
   });

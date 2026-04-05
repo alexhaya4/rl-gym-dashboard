@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
+import { useToastStore } from '../store/toastStore';
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api/v1';
 
@@ -21,10 +22,17 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+
+    if (status === 401) {
       useAuthStore.getState().logout();
       window.location.href = '/login';
+    } else if (status && status >= 500) {
+      useToastStore.getState().add('Server error, please try again', 'error');
+    } else if (!error.response && error.message === 'Network Error') {
+      useToastStore.getState().add('Network error, check your connection', 'error');
     }
+
     return Promise.reject(error);
   }
 );
