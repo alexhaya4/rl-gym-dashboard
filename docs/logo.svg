@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200" viewBox="0 0 680 200">
+  <g transform="translate(340, 100)">
+    <circle cx="-60" cy="-30" r="8" fill="#d97757" opacity="0.9"/>
+    <circle cx="-60" cy="30" r="8" fill="#d97757" opacity="0.7"/>
+    <circle cx="0" cy="-45" r="6" fill="#d97757" opacity="0.6"/>
+    <circle cx="0" cy="0" r="10" fill="#d97757"/>
+    <circle cx="0" cy="45" r="6" fill="#d97757" opacity="0.6"/>
+    <circle cx="60" cy="-30" r="8" fill="#d97757" opacity="0.8"/>
+    <circle cx="60" cy="30" r="8" fill="#d97757" opacity="0.7"/>
+    <line x1="-60" y1="-30" x2="0" y2="-45" stroke="#d97757" stroke-width="1.5" opacity="0.3"/>
+    <line x1="-60" y1="-30" x2="0" y2="0" stroke="#d97757" stroke-width="1.5" opacity="0.4"/>
+    <line x1="-60" y1="30" x2="0" y2="0" stroke="#d97757" stroke-width="1.5" opacity="0.4"/>
+    <line x1="-60" y1="30" x2="0" y2="45" stroke="#d97757" stroke-width="1.5" opacity="0.3"/>
+    <line x1="0" y1="-45" x2="60" y2="-30" stroke="#d97757" stroke-width="1.5" opacity="0.3"/>
+    <line x1="0" y1="0" x2="60" y2="-30" stroke="#d97757" stroke-width="1.5" opacity="0.4"/>
+    <line x1="0" y1="0" x2="60" y2="30" stroke="#d97757" stroke-width="1.5" opacity="0.4"/>
+    <line x1="0" y1="45" x2="60" y2="30" stroke="#d97757" stroke-width="1.5" opacity="0.3"/>
+    <path d="M 75,0 Q 95,-15 85,-35" fill="none" stroke="#d97757" stroke-width="1.5" opacity="0.5"/>
+    <path d="M 75,0 Q 95,15 85,35" fill="none" stroke="#d97757" stroke-width="1.5" opacity="0.5"/>
+    <text x="130" y="8" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="500" fill="#ffffff">RL Gym</text>
+  </g>
+</svg>
