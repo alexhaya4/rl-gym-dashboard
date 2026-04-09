@@ -34,17 +34,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks - scan for secrets in code
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+
       - run: npm ci
-      - name: npm audit
-        run: npm audit --audit-level=high
-        continue-on-error: true
-      - name: Check for secrets in code
-        run: npx secretlint "src/**/*"
-        continue-on-error: true
+
+      - name: npm audit - check for vulnerable packages
+        run: npm audit --audit-level=high || true
+
+      - name: Trivy - scan for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'
 
   test:
     runs-on: ubuntu-latest
