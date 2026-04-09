@@ -2,6 +2,8 @@
   <img src="docs/logo.svg" alt="RL Gym" width="400" />
 </p>
 
+## RL Gym -- Reinforcement Learning & Machine Learning Platform
+
 Web dashboard for the RL Gym platform. Train RL agents, run ML models, manage datasets, and monitor experiments.
 
 ![CI](https://github.com/alexhaya4/rl-gym-dashboard/actions/workflows/ci.yml/badge.svg)

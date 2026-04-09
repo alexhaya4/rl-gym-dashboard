@@ -99,7 +99,12 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
             <span className="text-white font-bold text-sm">RL</span>
           </div>
           {(!collapsed || mobileOpen) && (
-            <span className="font-semibold text-sm whitespace-nowrap">RL Gym</span>
+            <div className="flex flex-col leading-tight">
+              <span className="font-semibold text-sm whitespace-nowrap">RL Gym</span>
+              <span className="text-[10px] text-zinc-500 whitespace-nowrap">
+                Reinforcement Learning Platform
+              </span>
+            </div>
           )}
         </div>
 
