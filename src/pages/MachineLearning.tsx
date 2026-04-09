@@ -1,3 +1,4 @@
+import { Breadcrumbs } from '../components/UI/Breadcrumbs';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Brain, Trash2, Play } from 'lucide-react';
@@ -74,6 +75,7 @@ export default function MachineLearning() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs />
       <div>
         <h1 className="text-2xl font-semibold">Machine Learning</h1>
         <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary mt-1">

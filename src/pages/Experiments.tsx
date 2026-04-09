@@ -1,3 +1,5 @@
+import { Breadcrumbs } from '../components/UI/Breadcrumbs';
+import { useToastStore } from '../store/toastStore';
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, Search, List } from 'lucide-react';
@@ -26,6 +28,7 @@ const statusVariant = (s: string) => {
 };
 
 export default function Experiments() {
+  const toast = useToastStore();
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [filter, setFilter] = useState('');
@@ -46,6 +49,7 @@ export default function Experiments() {
   const createMutation = useMutation({
     mutationFn: (data: ExperimentCreate) => experimentsApi.create(data),
     onSuccess: () => {
+      toast.success('Experiment created');
       queryClient.invalidateQueries({ queryKey: ['experiments'] });
       setModalOpen(false);
     },
@@ -53,7 +57,10 @@ export default function Experiments() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => experimentsApi.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['experiments'] }),
+    onSuccess: () => {
+      toast.success('Experiment deleted');
+      queryClient.invalidateQueries({ queryKey: ['experiments'] });
+    },
   });
 
   const [episodes, setEpisodes] = useState<{ id: number; data: Record<string, unknown>[] } | null>(
@@ -79,6 +86,7 @@ export default function Experiments() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Experiments</h1>

@@ -1,3 +1,5 @@
+import { Breadcrumbs } from '../components/UI/Breadcrumbs';
+import { useToastStore } from '../store/toastStore';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Play, Square, RefreshCw, FileText, BarChart3 } from 'lucide-react';
@@ -51,6 +53,7 @@ const statusVariant = (s: string) => {
 };
 
 export default function Training() {
+  const toast = useToastStore();
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<number | null>(null);
@@ -97,6 +100,7 @@ export default function Training() {
   const startMutation = useMutation({
     mutationFn: (data: TrainingStart) => trainingApi.start(data),
     onSuccess: (response) => {
+      toast.success('Training started');
       queryClient.invalidateQueries({ queryKey: ['training'] });
       setModalOpen(false);
       setSubmitError(null);
@@ -142,6 +146,7 @@ export default function Training() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Training</h1>

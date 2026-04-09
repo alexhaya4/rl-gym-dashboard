@@ -1,3 +1,5 @@
+import { Breadcrumbs } from '../components/UI/Breadcrumbs';
+import { useToastStore } from '../store/toastStore';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Upload, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
@@ -9,6 +11,7 @@ import { datasetsApi } from '../api/datasets';
 import { extractError } from '../utils/extractError';
 
 export default function Datasets() {
+  const toast = useToastStore();
   const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
   const [name, setName] = useState('');
@@ -43,6 +46,7 @@ export default function Datasets() {
       return datasetsApi.upload(formData);
     },
     onSuccess: () => {
+      toast.success('Dataset uploaded');
       queryClient.invalidateQueries({ queryKey: ['datasets'] });
       setFile(null);
       setName('');
@@ -53,6 +57,7 @@ export default function Datasets() {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => datasetsApi.deleteDataset(id),
     onSuccess: () => {
+      toast.success('Dataset deleted');
       queryClient.invalidateQueries({ queryKey: ['datasets'] });
       setDeleteConfirm(null);
     },
@@ -60,6 +65,7 @@ export default function Datasets() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs />
       <div>
         <h1 className="text-2xl font-semibold">Datasets</h1>
         <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary mt-1">

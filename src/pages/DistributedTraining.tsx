@@ -1,3 +1,4 @@
+import { Breadcrumbs } from '../components/UI/Breadcrumbs';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Network, StopCircle } from 'lucide-react';
@@ -88,6 +89,7 @@ export default function DistributedTraining() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs />
       <div>
         <h1 className="text-2xl font-semibold">Distributed Training</h1>
         <p className="text-sm dark:text-dark-text-secondary text-light-text-secondary mt-1">
